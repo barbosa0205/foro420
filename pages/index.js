@@ -1,69 +1,212 @@
+import React, { useState } from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Post from '../components/post'
+import Container from '../components/Container'
+import ListBox from '../components/ui/ListBox'
+import useSelect from '../hooks/useSelect'
+import ButtonBorder from '../components/ButtonBorder'
+import ButtonRounded from '../components/ButtonRounded'
+import ListItem from '../components/ListItem'
+import Modal from '../components/Modal'
+import dayjs from 'dayjs'
+import dbConnect from '../utils/mongoose'
+import PostSchema from '../models/Post'
+import { getSession, useSession } from 'next-auth/react'
+import useUser from '../contexts/useUser'
+import { useRouter } from 'next/router'
+import CreatePostButton from '../components/CreatePostButton'
 
-export default function Home() {
+//posts hardcoded for now
+
+const postsfake = [
+  {
+    id: 1,
+    title: 'Titulo del post 1',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget con',
+    img: 'https://source.unsplash.com/random/400x400',
+    date: JSON.stringify(dayjs().format('DD/MM/YYYY')),
+    likes: 0,
+    dislikes: 0,
+    category: 'cultivo',
+    user: 'user1',
+    comments: [
+      {
+        id: 2,
+        content:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor',
+        user: 'user2',
+        likes: 0,
+        dislikes: 0,
+        date: new Date(),
+        resp: [
+          {
+            id: 1,
+            content:
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc',
+            user: 'user3',
+            likes: 0,
+            dislikes: 0,
+            date: new Date(),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Titulo del post 2',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget con',
+    img: 'https://source.unsplash.com/random/400x400',
+    date: new Date(),
+    likes: 0,
+    dislikes: 0,
+    category: 'cultivo',
+    user: 'user1',
+    comments: [
+      {
+        id: 1,
+        content:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor, nisl nunc ultrices eros, eu porttitor nisl nunc euismod nunc. Donec euismod, nisl eget consectetur tempor',
+        user: 'user2',
+        likes: 0,
+        dislikes: 0,
+        date: new Date(),
+        resp: [
+          {
+            id: 1,
+            content:
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc',
+            user: 'user3',
+            likes: 0,
+            dislikes: 0,
+            date: new Date(),
+          },
+        ],
+      },
+    ],
+  },
+]
+
+//optionPosts
+const optionPosts = [
+  {
+    id: 1,
+    value: 'Recientes',
+  },
+  {
+    id: 2,
+    value: 'Populares',
+  },
+]
+function Home({ posts, userSession }) {
+  const router = useRouter()
+  const { user, setUserData } = useUser()
+
+  //useSelect hook
+  const [selected, handleChange] = useSelect({
+    values: optionPosts,
+    selected: optionPosts[0],
+  })
+
+  const [postAnswerToggle, setPostAnswerToggle] = useState('APORTES')
+
+  React.useEffect(() => {
+    if (userSession) {
+      setUserData(userSession)
+    }
+  }, [])
+
   return (
-    <div className={styles.container}>
+    <>
       <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Generated by create next app" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Foro 420 | Home</title>
+        <meta name='description' content='Pagina principal de Foro 420' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
+      <main className='w-full h-full flex flex-col items-center'>
+        <Container>
+          <header className='px-2 w-full py-2 flex justify-between flex-wrap bg-gray-50 border-b-2 border-b-gray-100'>
+            <div className='py-1'>
+              <ButtonBorder
+                text='APORTES'
+                colorText={
+                  postAnswerToggle === 'APORTES'
+                    ? 'text-gray-50'
+                    : 'text-green-600'
+                }
+                otherStyles={
+                  postAnswerToggle === 'APORTES' ? 'bg-green-600' : ''
+                }
+                onClick={() => setPostAnswerToggle('APORTES')}
+              />
+              <ButtonBorder
+                text='PREGUNTAS'
+                colorText={
+                  postAnswerToggle === 'PREGUNTAS'
+                    ? 'text-gray-50'
+                    : 'text-green-600'
+                }
+                otherStyles={
+                  postAnswerToggle === 'PREGUNTAS' ? 'bg-green-600' : ''
+                }
+                onClick={() => setPostAnswerToggle('PREGUNTAS')}
+              />
+            </div>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+            <ButtonRounded child={true}>
+              <ListBox selected={selected.selected} handleChange={handleChange}>
+                {optionPosts.map((option) => (
+                  <ListItem key={option.id}>{option.value}</ListItem>
+                ))}
+              </ListBox>
+            </ButtonRounded>
+          </header>
+          {postAnswerToggle === 'APORTES' ? (
+            <>
+              {/* Posts contaienr */}
+              {postsfake.map((post) => (
+                <Post key={post.id} data={post} />
+              ))}
+            </>
+          ) : (
+            <>
+              {/*answers container */}
+              {posts.map((post) => (
+                <h1 key={post.id}>HOLA PREGUNTAS</h1>
+              ))}
+            </>
+          )}
+        </Container>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
+      <CreatePostButton />
+    </>
   )
+}
+export default Home
+
+export const getServerSideProps = async (context) => {
+  try {
+    const userSession = await getSession(context)
+    console.log('session', userSession)
+    await dbConnect()
+    const resp = await PostSchema.find({})
+
+    const posts = resp.map((doc) => {
+      const post = JSON.parse(JSON.stringify(doc))
+      post.id = `${doc._id}`
+      return post
+    })
+    console.log(resp)
+
+    return {
+      props: {
+        userSession,
+        posts,
+      },
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
