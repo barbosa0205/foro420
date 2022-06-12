@@ -151,7 +151,6 @@ const Navbar = () => {
         </div>
         <div className='w-fit h-full flex items-center justify-evenly'>
           {/* <Search /> */}
-          <Notify styles={'flex items-center justify-center md:hidden'} />
         </div>
         <div className='w-fit h-full flex items-center'>
           <section
@@ -172,7 +171,7 @@ const Navbar = () => {
               {userF420 && userF420?.username}
             </h3>
           </section>
-          <Notify styles={'hidden md:flex ml-10'} />
+          <Notify styles={'ml-10'} />
         </div>
       </nav>
     </>
