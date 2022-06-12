@@ -1,3 +1,4 @@
+import App from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import UserProvider from '../contexts/UserProvider'
 import Layout from '../components/Layout'

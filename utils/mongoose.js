@@ -1,6 +1,10 @@
 import { connect, connection } from 'mongoose'
 const MONGODB_URI = process.env.MONGODB_URI
 
+const conn = {
+  isConnected: false,
+}
+
 if (!MONGODB_URI) {
   throw new Error(
     'Please define the MONGODB_URI environment variable inside .env.local'
@@ -19,34 +23,26 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null }
 }
 
-const dbConnect = async () => {
+export const dbConnect = async () => {
   try {
-    if (cached.conn) {
-      return cached.conn
-    }
+    if (conn.isConnected) return
+    const db = await connect(MONGODB_URI)
 
-    if (!cached.promise) {
-      let opts = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        bufferCommands: false,
-      }
-      cached.promise = await connect(MONGODB_URI, opts)
-    }
-    cached.conn = await cached.promise
-    return cached.conn
+    conn.isConnected = db.connections[0].readyState
+
+    console.log(db.connection.db.databaseName)
+
+    console.log('MongoDB connected')
   } catch (error) {
     console.error(error)
   }
 }
 
 connection.on('connected', () => {
-  console.log('Mongoose connected 🚀')
+  console.log('Mongoose connected uwu')
 })
 
 connection.on('error', (err) => {
   console.error(err)
   process.exit(1)
 })
-
-export default dbConnect

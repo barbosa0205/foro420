@@ -8,9 +8,9 @@ import clientPromise from '../../../lib/mongodb'
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
-  session: {
-    jwt: true,
-  },
+
+  async encode() {},
+  async decode() {},
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -26,7 +26,7 @@ export default NextAuth({
     // signOut: '/auth/signout', // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
-    newUser: '/newUserForm', // If set, new users will be directed here on first sign in
+    newUser: '/welcome', // If set, new users will be directed here on first sign in
   },
 
   // Callbacks are asynchronous functions you can use to control what happens
@@ -36,7 +36,7 @@ export default NextAuth({
     // async signIn(user, account, profile) { return true },
     // async redirect(url, baseUrl) { return baseUrl },
     // async session(session, user) { return session },
-    // async jwt(token, user, account, profile, isNewUser) { return token }
+    //async jwt(token, user, account, profile, isNewUser) {},
   },
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events

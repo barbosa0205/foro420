@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react'
+import { useSelect } from '../../hooks/useSelect'
 
-const ListBox = ({ children, handleChange, selected }) => {
-  const handleChangeCallback = useCallback(handleChange, [handleChange])
+const ListBox = ({ handleChange, children, otherStyles, value }) => {
   return (
     <select
-      value={selected?.value}
-      onChange={() => handleChangeCallback}
-      className='px-1 bg-transparent w-min h-fit cursor-pointer focus:outline-none'
+      onChange={handleChange}
+      className={`px-1 bg-transparent w-min h-fit cursor-pointer focus:outline-none ${otherStyles}`}
+      value={value}
     >
       {children}
     </select>

@@ -8,6 +8,7 @@ const ButtonRounded = ({
   text,
   color = 'green-600',
   bgColor = 'gray-50',
+  otherStyles = '',
   ...rest
 }) => {
   return (
@@ -27,7 +28,9 @@ const ButtonRounded = ({
         <button
           className={`py-1 my-1 rounded-full font-mono ${
             'text-' + color
-          } font-bold ${'bg-' + bgColor} shadow-md shadow-gray-200`}
+          } font-bold ${
+            'bg-' + bgColor
+          } shadow-md shadow-gray-200 ${otherStyles}`}
           {...rest}
         >
           {text}

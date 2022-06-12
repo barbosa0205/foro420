@@ -4,8 +4,9 @@ import Navbar from './Navbar'
 import { useRouter } from 'next/router'
 const Layout = (props) => {
   const router = useRouter()
+
   return (
-    <div className='mx-auto min-w-fit w-full min-h-screen '>
+    <div className='mx-auto min-w-fit w-full  min-h-screen '>
       {router.pathname !== '/login' && <Navbar />}
       {props.children}
       {router.pathname !== '/login' && <Footer />}

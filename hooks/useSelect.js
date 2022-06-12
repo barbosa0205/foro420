@@ -1,15 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const useSelect = (data) => {
+export const useSelect = ({
+  options,
+  optionSelected,
+  setSubcategories,
+  subcategories,
+}) => {
+  const [selected, setSelected] = React.useState(optionSelected)
+
+  useEffect(() => {
+    console.log('selected', selected)
+  }, [options])
+
+  useEffect(() => {
+    if (selected?.subcategories) {
+      const newsubcategories = selected.subcategories.map((sub) => ({
+        name: sub,
+      }))
+      setSubcategories(newsubcategories)
+    }
+  }, [selected])
+
+  useEffect(() => {
+    if (subcategories?.length > 0) {
+      setSelected(subcategories[0])
+    }
+    if (subcategories?.length === 0) {
+      setSelected('')
+    }
+  }, [subcategories])
+
   const handleChange = (e) => {
     const { value } = e.target
-    const select = data.values.find((item) => item.value === value)
-    setSelected({
-      selected: select,
-    })
+    const newSelected = options.find((op) => op.name === value)
+    console.log('newSelected', newSelected)
+    setSelected(newSelected)
   }
-  const [selected, setSelected] = React.useState(data.selected)
   return [selected, handleChange]
 }
-
-export default useSelect

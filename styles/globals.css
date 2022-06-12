@@ -1,7 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* titles */
+@layer components {
+  .title-primary {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+/*texts*/
+@layer components {
+  .text-primary {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .text-secondary {
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+}
+/*buttons*/
+@layer components {
+  .btn-primary {
+    @apply py-2 px-14 bg-green-600 text-white font-semibold rounded-md w-80 shadow-sm hover:bg-green-800 focus:outline-none;
+  }
+}
+/*inputs*/
+@layer components {
+  .input-primary {
+    @apply min-w-fit  bg-transparent px-5 py-1 border-b-2 border-gray-300 focus:border-b-green-600 text-gray-600 outline-none;
+  }
+}
+
 * {
   --main-green: #00a65a;
   --border-green: #009b55;
-  --low-gray: #e9f0ed;
+  --low-gray: #f3f4f6;
   --dark: #000a06;
   box-sizing: border-box;
   margin: 0;
@@ -22,10 +60,86 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #ebebeb;
+  background-color: var(--low-gray);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.coverimage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  max-width: 150rem;
+  max-height: 30rem;
+}
+
+.coverImage {
+  min-height: 20rem;
+}
+
+@media (min-width: 630px) {
+  .coverImage {
+    min-height: 25rem;
+  }
+}
+@media (min-width: 768px) {
+  .coverImage {
+    min-height: 30rem;
+  }
+}
+@media (min-width: 1024px) {
+  .coverImage {
+    min-height: 35rem;
+  }
+}
+@media (min-width: 1200px) {
+  .coverImage {
+    min-height: 40rem;
+  }
+}
+
+.coverContainer {
+  max-height: 60rem;
+  width: 95%;
+  max-width: 70rem;
+}
+
+.imagesCoverContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.imagePostSize {
+  object-fit: cover;
+}
+
+/* post article */
+.postArticle {
+  min-width: 36rem;
+}
+
+@media (min-width: 500px) {
+  .imagesCoverContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 768px) {
+  .coverimage {
+    max-height: 35rem;
+  }
+}
+@media (min-width: 1000px) {
+  .coverimage {
+    max-height: 50rem;
+  }
+}
+@media (min-width: 1400px) {
+  .mainlayoutwidth {
+    max-width: 90%;
+    margin: 0 auto;
+  }
 }

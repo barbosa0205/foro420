@@ -10,8 +10,10 @@ export default function Document() {
         />
       </Head>
       <body>
-        <Main />
-        <NextScript />
+        <div>
+          <Main />
+          <NextScript />
+        </div>
       </body>
     </Html>
   )

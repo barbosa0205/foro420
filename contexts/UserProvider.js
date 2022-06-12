@@ -3,12 +3,15 @@ import React from 'react'
 export const userContext = React.createContext()
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = React.useState({})
+  const [userSignInfo, setUserSignInfo] = React.useState({})
+  const [userF420, setUserF420] = React.useState({})
 
-  const setUserData = (userData) => setUser(userData)
+  const setUserData = (userData) => setUserSignInfo(userData)
 
   const value = {
-    user,
+    user: userSignInfo,
+    userF420,
+    setUserF420,
     setUserData,
   }
 

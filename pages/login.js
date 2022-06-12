@@ -19,11 +19,16 @@ const Login = () => {
       <Head>
         <title>Login | Foro 420</title>
       </Head>
-      <header className='w-full flex justify-center items-center py-5'>
-        <Image src={leafImage} alt='logo' width={80} height={70} />
-        <h2 className='font-bold mt-5 mx-1 text-5xl text-green-600 '>
-          Foro 420
-        </h2>
+      <header className='w-full  flex justify-center'>
+        <div
+          onClick={() => router.push('/')}
+          className=' w-fit flex justify-center items-center py-5 cursor-pointer'
+        >
+          <Image src={leafImage} alt='logo' width={80} height={70} />
+          <h2 className='font-bold mt-5 mx-1 text-5xl text-green-600 '>
+            Foro 420
+          </h2>
+        </div>
       </header>
       <main>
         <ButtonPrimary
