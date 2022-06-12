@@ -1,8 +1,12 @@
 import React from 'react'
 import Icon from './Icons/Icon'
 
-const Notify = () => {
-  return <Icon icon='ri-notification-2-line cursor-pointer'></Icon>
+const Notify = ({ styles }) => {
+  return (
+    <div className={`${styles}`}>
+      <Icon icon='ri-notification-2-line cursor-pointer'></Icon>
+    </div>
+  )
 }
 
 export default Notify

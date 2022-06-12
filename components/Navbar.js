@@ -63,6 +63,15 @@ const Navbar = () => {
                 {userF420?._id ? (
                   <>
                     <LinkItem
+                      icon='ri-home-2-line'
+                      text='Inicio'
+                      to={`/`}
+                      onClick={() => {
+                        setShowSide(false)
+                        router.push('/create-post')
+                      }}
+                    />
+                    <LinkItem
                       icon='ri-add-box-line'
                       text='Crear una Publicación'
                       to={`/create-post`}
@@ -141,39 +150,30 @@ const Navbar = () => {
           </Link>
         </div>
         <div className='w-fit h-full flex items-center justify-evenly'>
-          <Links>
-            <Link href='/'>
-              <a>
-                <Icon icon='ri-home-7-line' />
-              </a>
-            </Link>
-            <Link href='/'>
-              <a>
-                <Icon icon='ri-store-2-line' />
-              </a>
-            </Link>
-          </Links>
-          <Search />
-          <Notify />
+          {/* <Search /> */}
+          <Notify styles={'flex items-center justify-center md:hidden'} />
         </div>
-        <section
-          onClick={() => {
-            setShowSide(!showSide)
-          }}
-          className='relative flex-col h-full items-center justify-center mt-2 border-gray-300 hidden md:flex cursor-pointer'
-        >
-          <Image
-            src={userF420?.image || user?.image || userImageDefault}
-            alt='profile'
-            width={50}
-            height={50}
-            className='rounded-full border-8'
-          />
-          <i className='ri-arrow-drop-down-line absolute -right-4 bottom-16 text-5xl'></i>
-          <h3 className='font-semibold text-gray-50'>
-            {userF420 && userF420?.username}
-          </h3>
-        </section>
+        <div className='w-fit h-full flex items-center'>
+          <section
+            onClick={() => {
+              setShowSide(!showSide)
+            }}
+            className='relative flex-col h-full items-center justify-center mt-2 border-gray-300 hidden md:flex cursor-pointer'
+          >
+            <Image
+              src={userF420?.image || user?.image || userImageDefault}
+              alt='profile'
+              width={50}
+              height={50}
+              className='rounded-full border-8'
+            />
+            <i className='ri-arrow-drop-down-line absolute -right-4 bottom-16 text-5xl'></i>
+            <h3 className='font-semibold text-gray-50'>
+              {userF420 && userF420?.username}
+            </h3>
+          </section>
+          <Notify styles={'hidden md:flex ml-10'} />
+        </div>
       </nav>
     </>
   )
