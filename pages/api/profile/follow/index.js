@@ -1,5 +1,5 @@
 import UserSchema from 'models/F420User'
-
+import { Server } from 'socket.io'
 const handler = async (req, res) => {
   const { method, query, body } = req
   switch (method) {

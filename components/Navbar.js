@@ -83,7 +83,7 @@ const Navbar = () => {
                     <LinkItem
                       icon='ri-user-smile-line'
                       text='Perfil'
-                      to={`/profile/${userF420?.username}?user_id=${userF420?._id}`}
+                      to={`/profile/${userF420?.username}?id=${userF420?._id}`}
                       onClick={() => {
                         setShowSide(false)
                         router.push(`/profile/${userF420.username}`)
@@ -135,7 +135,7 @@ const Navbar = () => {
           </aside>
         </div>
       )}
-      <nav className='relative flex items-center justify-between px-5 sm:justify-around  w-full min-w-fit h-24 sm:h-32 bg-gradient-to-tl from-green-600 to-green-500'>
+      <nav className='relative flex items-center justify-between px-5 sm:justify-around  w-full min-w-fit h-24 sm:h-28 bg-gradient-to-tl from-green-600 to-green-500'>
         <div className='flex items-center justify-evenly w-fit'>
           <Icon
             icon='ri-menu-fill sm:absolute sm:left-0 cursor-pointer md:hidden'
@@ -155,9 +155,9 @@ const Navbar = () => {
         <div className='w-fit h-full flex items-center'>
           <section
             onClick={() => {
-              setShowSide(!showSide)
+              setShowSide(true)
             }}
-            className='relative flex-col h-full items-center justify-center mt-2 border-gray-300 hidden md:flex cursor-pointer'
+            className='relative md:flex flex-col h-full items-center justify-center mt-2 mr-10 border-gray-300 hidden cursor-pointer'
           >
             <Image
               src={userF420?.image || user?.image || userImageDefault}
@@ -166,12 +166,12 @@ const Navbar = () => {
               height={50}
               className='rounded-full border-8'
             />
-            <i className='ri-arrow-drop-down-line absolute -right-4 bottom-16 text-5xl'></i>
+            <i className='ri-arrow-drop-down-line absolute -right-4 bottom-12 text-5xl text-gray-50'></i>
             <h3 className='font-semibold text-gray-50'>
               {userF420 && userF420?.username}
             </h3>
           </section>
-          <Notify styles={'ml-10'} />
+          <Notify styles={'mr-5'} />
         </div>
       </nav>
     </>

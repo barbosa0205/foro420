@@ -1,5 +1,4 @@
 import { Server } from 'socket.io'
-
 export default function SocketHandler(req, res) {
   if (res.socket.server.io) {
     console.log('Socket is already connected')
@@ -10,6 +9,13 @@ export default function SocketHandler(req, res) {
 
     io.on('connection', (socket) => {
       console.log('a user connected')
+
+      socket.on('followNotify', ({ user, following }) => {
+        socket.to(following._id).emit('followNotify', {
+          user,
+          following,
+        })
+      })
 
       socket.on('disconnect', () => {
         console.log('user disconnected')
