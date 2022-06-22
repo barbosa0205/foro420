@@ -25,7 +25,8 @@ import { createPostErrors } from 'helpers/createPostErrors'
 import ButtonPrimary from 'components/ButtonPrimary'
 import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
-const CreatePost = ({ user420, categories, types }) => {
+import { dbConnect } from 'utils/mongoose'
+const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -70,10 +71,6 @@ const CreatePost = ({ user420, categories, types }) => {
   }, [])
 
   useEffect(() => {
-    setUserF420(user420)
-  }, [])
-
-  useEffect(() => {
     console.log('subSelect', subSelect)
   }, [subSelect])
 
@@ -110,7 +107,7 @@ const CreatePost = ({ user420, categories, types }) => {
         title,
         content,
         image: coverImage.src,
-        postedBy: user420._id,
+        postedBy: userF420._id,
         category: categorySelect._id,
         subcategory: subSelect.name,
         type: typeSelect._id,
@@ -264,28 +261,7 @@ const CreatePost = ({ user420, categories, types }) => {
 }
 export const getServerSideProps = async (ctx) => {
   try {
-    const session = await getSession(ctx)
-    const { user } = session
-
-    if (!user.email) {
-      ctx.res.writeHead(302, {
-        Location: '/login',
-      })
-      ctx.res.end()
-    }
-    let user420 = await UserSchema.findOne({ email: user.email })
-
-    //verificar si el usuario completo su perfil
-    if (!user420) {
-      ctx.res.writeHead(302, {
-        Location: '/welcome',
-      })
-      ctx.res.end()
-    }
-
-    //transform user420 to json
-    user420 = JSON.parse(JSON.stringify(user420))
-
+    await dbConnect()
     //get all categories
     let categories = await CategorySchema.find({})
 
@@ -296,7 +272,6 @@ export const getServerSideProps = async (ctx) => {
 
     return {
       props: {
-        user420,
         categories,
         types,
       },

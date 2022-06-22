@@ -8,14 +8,9 @@ import Post from './Post'
 import { useRouter } from 'next/router'
 import ButtonPrimary from './ButtonPrimary'
 import ButtonBorder from './ButtonBorder'
-import { stringify } from 'json5'
-
-import io from 'socket.io-client'
-
-let socket
 
 const UserProfile = () => {
-  const { userF420 } = useUser()
+  const { userF420, notify, setNotify, notifies, setNotifies } = useUser()
   const router = useRouter()
   const [user, setUser] = React.useState(null)
   const [posts, setPosts] = React.useState([])
@@ -93,30 +88,15 @@ const UserProfile = () => {
       })
       const data = await resp.json()
       setFollowing(data.following)
-      socket.emit('followNotify', {
-        user: userF420,
-        following: user,
-      })
+      // socket.emit('followNotify', {
+      //   user: userF420,
+      //   following: user,
+      // })
     } catch (error) {
       setAlertError(true)
       console.log('Error al seguir usuario', error)
     }
   }
-
-  const socketInitializer = async () => {
-    await fetch(`/api/socket`)
-    socket = io()
-    socket.id = userF420._id
-    socket.on('connect', () => {
-      console.log('Connected to socket')
-    })
-
-    return null
-  }
-
-  useEffect(() => {
-    socketInitializer()
-  }, [])
 
   useEffect(() => {
     getFriend()
@@ -131,6 +111,10 @@ const UserProfile = () => {
     if (user?._id) {
       getRecentPosts()
       getRecentQuestions()
+    }
+    return () => {
+      setPosts([])
+      setQuestions([])
     }
   }, [user])
 

@@ -10,7 +10,7 @@ const Post = ({ data }) => {
   return (
     <>
       {data._id && (
-        <article className='postArticle flex items-center w-full min-h-min max-h-44 p-2 rounded-xl bg-gray-50 overflow-hidden'>
+        <article className='postArticle flex items-center w-full min-h-min max-h-44 p-2 rounded-xl bg-gray-50 overflow-hidden hover:bg-stone-100'>
           <div className='flex justify-center items-center max-w-xs min-w-fit'>
             <Image
               src={data.image}

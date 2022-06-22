@@ -10,11 +10,19 @@ const CommentSchema = new Schema(
       type: String,
       required: [true, 'El contenido es requerido'],
     },
-    likes: {
-      type: Number,
-      default: 0,
+    post: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+      required: [true, 'El post es requerido'],
     },
-    dislikes: {
+    commentType: {
+      type: String,
+    },
+    parentComment: {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+    likes: {
       type: Number,
       default: 0,
     },

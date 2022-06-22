@@ -7,19 +7,17 @@ import defaultUserImage from 'assets/default_user.jpg'
 import Head from 'next/head'
 import UserSchema from 'models/F420User'
 import { useSession, getSession } from 'next-auth/react'
-import { dbConnect } from 'utils/mongoose'
 import { useRouter } from 'next/router'
 import useUser from 'contexts/useUser'
-const Welcome = ({ userSession, hasRole }) => {
-  const session = useSession()
+const Welcome = () => {
   const router = useRouter()
-  const { setUserData } = useUser()
+  const { user, userF420, setUserData } = useUser()
   const [formValues, handleFormValuesChange, validateErrorSubmit, errors] =
     UseForm(
       {
-        fullname: userSession ? userSession.name : '',
+        fullname: user.name,
         username: '',
-        email: userSession ? userSession.email : '',
+        email: user.email,
         birthday: '',
       },
       completeProfileErrors
@@ -85,29 +83,16 @@ const Welcome = ({ userSession, hasRole }) => {
   }
 
   React.useEffect(() => {
-    if (hasRole) {
+    if (userF420) {
       router.push('/')
     }
   }, [])
 
   React.useEffect(() => {
-    if (session.status === 'loading') {
-      return
-    } else if (session.status === 'authenticated') {
-      return
-    } else if (session.status === 'unauthenticated') {
-      router.push('/login')
+    if (user.image) {
+      setImage(user.image)
     }
-  }, [router, session])
-
-  React.useEffect(() => {
-    if (userSession) {
-      setUserData(userSession)
-      if (userSession.image) {
-        setImage(userSession.image)
-      }
-    }
-  }, [])
+  }, [user])
 
   return (
     <>
@@ -217,27 +202,3 @@ const Welcome = ({ userSession, hasRole }) => {
 }
 
 export default Welcome
-
-export const getServerSideProps = async (context) => {
-  try {
-    await dbConnect()
-    const session = await getSession(context)
-    const { user } = session
-    const userSession = user
-    console.log(userSession)
-
-    const user420 = await UserSchema.findOne({
-      email: userSession.email,
-    })
-    const hasRole = user420?.role ? true : false
-
-    return {
-      props: { userSession, hasRole },
-    }
-  } catch (error) {
-    console.error(error)
-    return {
-      props: {},
-    }
-  }
-}

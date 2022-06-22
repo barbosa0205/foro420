@@ -1,29 +1,26 @@
-import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import useWindowDimensions from '../hooks/useWindowDimensions'
-import ButtonPrimary from './ButtonPrimary'
+
 import Icon from './Icons/Icon'
-import Links from './Links'
+
 import Notify from './Notify'
-import Search from './Search'
-import User from './User'
+
 import Image from 'next/image'
 import userImageDefault from 'assets/default_user.jpg'
 
-import { Transition } from '@headlessui/react'
 import useUser from 'contexts/useUser'
 import LinkItem from './LinkItem'
+import Notification from './Notification'
 
 const Navbar = () => {
+  const { user, userF420, notify } = useUser()
   const router = useRouter()
-  const { data: session, status } = useSession()
+
   const { height, width } = useWindowDimensions()
 
   const [showSide, setShowSide] = React.useState(false)
-
-  const { user, userF420 } = useUser()
 
   return (
     <>
@@ -45,6 +42,7 @@ const Navbar = () => {
                 onClick={() => setShowSide(false)}
               />
             </div> */}
+
             {/* user info */}
             <section>
               <div className='flex flex-col items-center justify-center pb-3 pt-5 border-b-2 border-gray-300 md:hidden'>
@@ -60,7 +58,7 @@ const Navbar = () => {
                 </h3>
               </div>
               <section>
-                {userF420?._id ? (
+                {userF420?._id || user.image ? (
                   <>
                     <LinkItem
                       icon='ri-home-2-line'
@@ -83,10 +81,20 @@ const Navbar = () => {
                     <LinkItem
                       icon='ri-user-smile-line'
                       text='Perfil'
-                      to={`/profile/${userF420?.username}?id=${userF420?._id}`}
+                      to={
+                        userF420?._id
+                          ? `/profile/${userF420?.username}?id=${userF420?._id}`
+                          : '/welcome'
+                      }
                       onClick={() => {
                         setShowSide(false)
-                        router.push(`/profile/${userF420.username}`)
+                        if (userF420?._id) {
+                          router.push(
+                            `/profile/${userF420?.username}?id=${userF420?._id}`
+                          )
+                        } else {
+                          router.push(`/welcome`)
+                        }
                       }}
                     />
                     <LinkItem
@@ -135,10 +143,10 @@ const Navbar = () => {
           </aside>
         </div>
       )}
-      <nav className='relative flex items-center justify-between px-5 sm:justify-around  w-full min-w-fit h-24 sm:h-28 bg-gradient-to-tl from-green-600 to-green-500'>
+      <nav className='relative flex items-center justify-between lg:justify-around px-5  w-full min-w-fit h-24 sm:h-28 bg-gradient-to-tl from-green-600 to-green-500'>
         <div className='flex items-center justify-evenly w-fit'>
           <Icon
-            icon='ri-menu-fill sm:absolute sm:left-0 cursor-pointer md:hidden'
+            icon='ri-menu-fill cursor-pointer md:hidden'
             onClick={() => setShowSide(true)}
           />
 
@@ -174,6 +182,7 @@ const Navbar = () => {
           <Notify styles={'mr-5'} />
         </div>
       </nav>
+      {notify && <Notification data={notify} />}
     </>
   )
 }
