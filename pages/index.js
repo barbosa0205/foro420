@@ -74,16 +74,22 @@ function Home({ postsToShow, questionsPosts }) {
           {postAnswerToggle === 'APORTES' ? (
             <>
               {/* Posts contaienr */}
-              {postsToShow &&
-                postsToShow.map((post) => <Post key={post._id} data={post} />)}
+              {postsToShow.length > 0 ? (
+                postsToShow.map((post) => <Post key={post._id} data={post} />)
+              ) : (
+                <p>No hay posts</p>
+              )}
             </>
           ) : (
             <>
               {/*answers container */}
-              {questionsPosts &&
+              {questionsPosts.length > 0 ? (
                 questionsPosts.map((post) => (
                   <Post key={post._id} data={post} />
-                ))}
+                ))
+              ) : (
+                <p>No hay posts</p>
+              )}
             </>
           )}
         </Container>

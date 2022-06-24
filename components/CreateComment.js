@@ -50,7 +50,7 @@ const CreateComment = ({ user, postId, setComments }) => {
         ></textarea>
         <button
           onClick={publishComment}
-          className='p-2 rounded-md text-gray-50 bg-green-600'
+          className='p-2 rounded-md text-gray-50 bg-emerald-600'
         >
           Comentar
         </button>

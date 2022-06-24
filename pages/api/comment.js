@@ -27,8 +27,6 @@ export default async function handler(req, res) {
 
         comment.postedBy = await UserSchema.findById(comment.postedBy)
 
-        console.log('is valid?', mongoose.Types.ObjectId.isValid(comment._id))
-
         if (body.type === 'response') {
           comment.parentComment = body.parentComment
 
@@ -45,11 +43,15 @@ export default async function handler(req, res) {
         res.status(200).json(comment)
       } catch (error) {
         console.log(error)
+        res.status(404).json({
+          success: false,
+          error,
+        })
       }
+      break
 
     case 'PUT':
       try {
-        console.log('wasa')
         let commentEdited = await CommentSchema.findOneAndUpdate(
           {
             _id: body.id,
@@ -67,5 +69,59 @@ export default async function handler(req, res) {
       } catch (error) {
         return res.status(404).json({ success: false, error: error })
       }
+      break
+    case 'DELETE':
+      try {
+        if (body.responses) {
+          const comment = await CommentSchema.findOne({
+            _id: body.id,
+          })
+          if (comment.responses.length) {
+            comment.responses.forEach(async (response) => {
+              await CommentSchema.deleteOne({
+                _id: response,
+              })
+            })
+          }
+          const commentDeleted = await CommentSchema.deleteOne({
+            _id: body.id,
+          })
+          res.status(200).json({
+            success: true,
+            message: 'Comentario eliminado correctamente',
+          })
+        } else {
+          const comment = await CommentSchema.findOne({
+            _id: body.commentId,
+          })
+          let responses = comment.responses
+
+          responses = responses.filter((r) => {
+            return body.id !== r.toString()
+          })
+
+          const newResps = await CommentSchema.findOneAndUpdate(
+            {
+              _id: body.commentId,
+            },
+            {
+              responses: responses,
+            }
+          )
+          console.log('newResps', responses)
+          let commentDeleted = await CommentSchema.deleteOne({
+            _id: body.id,
+          })
+          res.status(200).json({
+            success: true,
+            message: 'Respuesta eliminada correctamente',
+            responses,
+          })
+        }
+      } catch (error) {
+        console.log(error)
+        return res.status(404).json({ success: false, message: error })
+      }
+      break
   }
 }

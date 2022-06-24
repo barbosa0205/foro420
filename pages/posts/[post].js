@@ -11,17 +11,45 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Comment from 'components/Comment'
 import CreateComment from 'components/CreateComment'
-const PostPage = ({ user, post }) => {
-  const { userF420, setUserF420 } = useUser()
+import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/router'
+import Icon from 'components/Icons/Icon'
+import { MenuPopup } from 'components/MenuPopup'
+import { Alert } from 'components/Alert'
+import Modal from 'components/Modal'
+const PostPage = ({ post, user: userConnected }) => {
+  const router = useRouter()
+  const { user, userF420, setUserF420 } = useUser()
   const [comments, setComments] = useState([])
+  const [notify, setNotify] = React.useState('')
+  const [openSettings, setOpenSettings] = React.useState(false)
+  const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState()
+
+  const deletePost = async () => {
+    //TODO: do the delete post logic after come back from smoke weed 🥦
+    const resp = await fetch('/api/posts/post?id=' + post._id, {
+      method: 'DELETE',
+    })
+  }
+
   useEffect(() => {
-    if (user) {
-      setUserF420(user)
+    if (!userConnected.user) {
+      router.push('/login')
     }
-    if (post) {
-      setComments(post.comments)
+  }, []) |
+    useEffect(() => {
+      if (post) {
+        setComments(post.comments)
+      }
+    }, [])
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 2500)
     }
-  }, [])
+  }, [notify])
 
   return (
     <>
@@ -34,13 +62,38 @@ const PostPage = ({ user, post }) => {
               layout='fill'
               objectFit='cover'
             />
+
             <div className='z-10 absolute right-0 bottom-0 w-fit bg-black rounded-sm bg-opacity-40'>
               <h1 className=' text-right font-semibold text-3xl px-2 pt-5 text-gray-50 text-opacity-100'>
                 {post.title}
               </h1>
             </div>
           </header>
-
+          <div className='relative w-full flex items-center justify-end px-3 py-2'>
+            <Icon
+              icon={'ri-settings-4-fill cursor-pointer'}
+              color='text-stone-400'
+              onClick={() => setOpenSettings(!openSettings)}
+            />
+            <AnimatePresence>
+              {openSettings && (
+                <MenuPopup right='right-16' top={'top-5'}>
+                  <p className='text-2xl cursor-pointer px-5 hover:bg-gray-200'>
+                    Editar publicación
+                  </p>
+                  <p
+                    onClick={() => {
+                      setOpenDeleteQuestion(true)
+                      setOpenSettings(false)
+                    }}
+                    className='text-2xl cursor-pointer px-5 hover:bg-gray-200'
+                  >
+                    Eliminar publicación
+                  </p>
+                </MenuPopup>
+              )}
+            </AnimatePresence>
+          </div>
           <div className='flex items-center bg-white shadow-sm max-w-fit px-5 py-1 rounded-md mt-6 ml-1'>
             <Image
               className='w-40 h-40 rounded-full mx-auto'
@@ -72,9 +125,9 @@ const PostPage = ({ user, post }) => {
               setComments={setComments}
             />
             {comments.length ? (
-              comments.map((comment) => (
+              comments.map((comment, index) => (
                 <Comment
-                  key={comment._id}
+                  key={index}
                   commentId={comment._id}
                   userImage={comment.postedBy.image}
                   username={comment.postedBy.username}
@@ -82,6 +135,8 @@ const PostPage = ({ user, post }) => {
                   postId={post._id}
                   responses={comment.responses}
                   postedbyId={comment.postedBy._id}
+                  setNotify={setNotify}
+                  setComments={setComments}
                 />
               ))
             ) : (
@@ -91,6 +146,25 @@ const PostPage = ({ user, post }) => {
             )}
           </section>
         </main>
+      )}
+
+      {openDeleteQuestion && (
+        <Modal position='fixed'>
+          <Alert
+            message={'Seguro que quieres eliminar la publicación?'}
+            type={'yesno'}
+            actionYes={deletePost}
+            actionNo={() => setOpenDeleteQuestion(false)}
+          />
+        </Modal>
+      )}
+
+      {notify && (
+        <div className='fixed z-10 top-10 w-full flex items-center justify-center'>
+          <span className='p-7 bg-emerald-600 shadow-md rounded-md'>
+            <h3 className='text-2xl font-bold text-stone-50'>{notify}</h3>
+          </span>
+        </div>
       )}
     </>
   )
@@ -102,19 +176,18 @@ export const getServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    //get user from db
-    const session = await getSession(context)
-    const userSession = session.user
-    const user = await JSON.parse(
-      JSON.stringify(
-        await UserSchema.findOne({
-          email: userSession.email,
-        })
-      )
-    )
+    const user = await getSession(context)
 
     const urlId = context.query.post
     const post = JSON.parse(JSON.stringify(await PostSchema.findById(urlId)))
+
+    if (!post) {
+      return {
+        redirect: {
+          destination: '/',
+        },
+      }
+    }
     const postedBy = JSON.parse(
       JSON.stringify(await UserSchema.findById(post.postedBy))
     )
@@ -155,8 +228,8 @@ export const getServerSideProps = async (context) => {
     post.comments = JSON.parse(JSON.stringify(commentsFilter))
     return {
       props: {
-        user,
         post,
+        user,
       },
     }
   } catch (error) {

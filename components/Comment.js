@@ -4,7 +4,9 @@ import React from 'react'
 import CommentResp from './CommentResp'
 import CreateResp from './CreateResp'
 import { MenuPopup } from './MenuPopup'
-
+import Modal from './Modal'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Alert } from './Alert'
 const Comment = ({
   postId,
   userImage,
@@ -14,6 +16,8 @@ const Comment = ({
   responses,
   commentId,
   postedbyId,
+  setNotify,
+  setComments,
 }) => {
   const { userF420 } = useUser()
   const [openCreateresp, setOpenCreateResp] = React.useState(false)
@@ -24,6 +28,7 @@ const Comment = ({
   const [commentContent, setCommentContent] = React.useState(comment)
   const [contentEditable, setContentEditable] = React.useState('')
   const [editComment, setEditComment] = React.useState(false)
+  const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState(false)
 
   const showResponses = async ({ qty, limit }) => {
     if (qty <= limit) {
@@ -51,7 +56,6 @@ const Comment = ({
       })
       const data = await resp.json()
       if (data.success) {
-        console.log('sipaso')
         setCommentContent(contentEditable)
         setContentEditable('')
         setEditComment(false)
@@ -59,11 +63,60 @@ const Comment = ({
     }
   }
 
+  const deleteComment = async () => {
+    const resp = await fetch('/api/comment', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: commentId,
+        responses,
+      }),
+    })
+    const data = await resp.json()
+    console.log(data)
+    if (data.success) {
+      setNotify(data.message)
+      setComments((comment) => {
+        const newArray = comment.filter((c) => c._id !== commentId)
+        return newArray
+      })
+      setOpenDeleteQuestion(false)
+    } else {
+      setNotify('No se pudo borrar la respuesta')
+      setOpenDeleteQuestion(false)
+    }
+  }
+
+  React.useEffect(() => {
+    return () => {
+      setContentEditable(false)
+    }
+  }, [])
+
   return (
     <>
       {postId && (
         <>
-          <article className='width-full pt-2 pb-4 mr-5'>
+          <motion.article
+            initial={{
+              opacity: 0,
+              x: '-100vw',
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
+            exit={{
+              x: '100vw',
+              opacity: 0,
+            }}
+            transition={{
+              duration: 0.3,
+            }}
+            className='width-full pt-2 pb-4 mr-5'
+          >
             <div className='relative w-full px-2 pb-5 flex items-center'>
               <Image
                 src={userImage}
@@ -128,21 +181,24 @@ const Comment = ({
                         className='ri-more-2-fill text-stone-400 absolute -right-6 top-1 cursor-pointer'
                       ></i>
                       {openCommentOptions && (
-                        <MenuPopup>
+                        <MenuPopup top='top-2' right='right-1'>
                           <p
                             onClick={() => {
                               setContentEditable(commentContent)
                               setOpenCommentOptions(false)
                               setEditComment(true)
                             }}
-                            className='text-2xl my-1 cursor-pointer'
+                            className='text-2xl my-1 px-8 cursor-pointer'
                           >
                             Editar
                           </p>
                           <hr />
                           <p
-                            onClick={() => deleteComment}
-                            className='text-2xl my-1 cursor-pointer'
+                            onClick={() => {
+                              setOpenDeleteQuestion(true)
+                              setOpenCommentOptions(false)
+                            }}
+                            className='text-2xl my-1 px-8 cursor-pointer'
                           >
                             Borrar
                           </p>
@@ -154,7 +210,7 @@ const Comment = ({
                 {/* end optionComments*/}
               </div>
             </div>
-          </article>
+          </motion.article>
           {responsesLength > 0 && !responsesPublished.length && (
             <p
               onClick={() =>
@@ -169,13 +225,18 @@ const Comment = ({
             </p>
           )}
           {responsesPublished &&
-            responsesPublished.map((response) => (
+            responsesPublished.map((response, index) => (
               <>
                 <CommentResp
-                  key={response._id}
+                  key={index}
                   userImage={response.postedBy.image}
                   username={response.postedBy.username}
                   comment={response.content}
+                  postedbyId={response.postedBy._id}
+                  respId={response._id}
+                  setResponsesToShow={setResponsesToShow}
+                  commentId={commentId}
+                  setNotify={setNotify}
                 />
               </>
             ))}
@@ -189,17 +250,33 @@ const Comment = ({
             />
           )}
           {responsesToShow.length > 0 &&
-            responsesToShow.map((response) => (
+            responsesToShow.map((response, index) => (
               <CommentResp
-                key={response._id}
+                key={index}
                 userImage={response.postedBy.image}
                 username={response.postedBy.username}
                 comment={response.content}
+                postedbyId={response.postedBy._id}
+                respId={response._id}
+                setResponsesToShow={setResponsesToShow}
+                commentId={commentId}
+                setNotify={setNotify}
               />
             ))}
         </>
       )}
+
       <hr />
+      {openDeleteQuestion && (
+        <Modal position='fixed'>
+          <Alert
+            type={'yesno'}
+            message={'Seguro que quieres eliminar este comentario?'}
+            actionNo={() => setOpenDeleteQuestion(false)}
+            actionYes={deleteComment}
+          />
+        </Modal>
+      )}
     </>
   )
 }

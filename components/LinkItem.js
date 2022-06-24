@@ -13,7 +13,7 @@ const LinkItem = ({ icon, to, text, ...rest }) => {
         <a className=' w-full block text-center  text-3xl'>{text}</a>
       </Link>
       <span className='flex items-center justify-center'>
-        <Icon className={icon + ' text-4xl ml-2 text-green-600'} />
+        <Icon className={icon + ' text-4xl ml-2 text-emerald-600'} />
       </span>
     </div>
   )
