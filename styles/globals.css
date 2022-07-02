@@ -36,6 +36,11 @@
   }
 }
 
+@font-face {
+  font-family: 'Type2';
+  src: url('/fonts/TYPE2.TTF');
+}
+
 * {
   --main-green: #00a65a;
   --border-green: #009b55;
@@ -75,6 +80,10 @@ a {
   object-position: bottom;
   max-width: 150rem;
   max-height: 30rem;
+}
+
+.shadowLogo {
+  text-shadow: 0.4rem 0.1rem 0.1rem #004637, -0.6rem -0.1rem 0 #004637;
 }
 
 .coverImage {

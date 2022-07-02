@@ -26,10 +26,6 @@ const PostSchema = new Schema(
       type: Number,
       default: 0,
     },
-    dislikes: {
-      type: Number,
-      default: 0,
-    },
     category: {
       type: Schema.Types.ObjectId,
       ref: 'Category',

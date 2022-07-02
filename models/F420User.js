@@ -47,6 +47,12 @@ const User = new Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    postsLiked: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
     friends: [
       {
         type: String,

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import ButtonPrimary from '../components/ButtonPrimary'
-import leafImage from '../assets/leaf.png'
+import LeafImage from 'assets/SVG/Mesa de trabajo 1.svg'
 import Head from 'next/head'
 const Login = () => {
   const router = useRouter()
@@ -15,36 +15,39 @@ const Login = () => {
   })
 
   return (
-    <>
+    <div className='pt-14'>
       <Head>
         <title>Login | Foro 420</title>
       </Head>
       <header className='w-full  flex justify-center'>
-        <div
+        <h2
           onClick={() => router.push('/')}
-          className=' w-fit flex justify-center items-center py-5 cursor-pointer'
+          className='shadowLogo font-bold mt- mx-1 text-9xl cursor-pointer font-Type2 text-emerald-600'
         >
-          <Image src={leafImage} alt='logo' width={80} height={70} />
-          <h2 className='font-bold mt-5 mx-1 text-5xl text-green-600 '>
-            Foro 420
-          </h2>
-        </div>
+          FORO
+          <span className='shadowLogo mx-4'>420</span>
+        </h2>
       </header>
       <main>
-        <ButtonPrimary
-          text='Facebook'
-          color='text-gray-50'
-          bgColor='bg-blue-600'
-          onClick={() => signIn('facebook')}
-        />
-        <ButtonPrimary
-          text='Google'
-          color='text-gray-50'
-          bgColor='bg-red-600'
-          onClick={() => signIn('google')}
-        />
+        <section>
+          <LeafImage />
+        </section>
+        <section className='w-full max-w-screen-md flex items-center justify-center mt-10'>
+          <ButtonPrimary
+            text='Facebook'
+            color='text-gray-50'
+            bgColor='bg-blue-600'
+            onClick={() => signIn('facebook')}
+          />
+          <ButtonPrimary
+            text='Google'
+            color='text-gray-50'
+            bgColor='bg-red-600'
+            onClick={() => signIn('google')}
+          />
+        </section>
       </main>
-    </>
+    </div>
   )
 }
 

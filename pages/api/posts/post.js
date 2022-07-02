@@ -38,5 +38,21 @@ export default async function handler(req, res) {
         return res.status(500).json({ message: 'Error al obtener el post' })
       }
       break
+
+    case 'PUT':
+      try {
+        const postToEdit = await PostSchema.findOneAndUpdate(
+          {
+            _id: body.data.id,
+          },
+          {
+            ...body.data,
+          }
+        )
+      } catch (error) {
+        console.log('ERROR AL OBTENER POST', error)
+        return res.status(500).json({ message: 'Error al obtener el post' })
+      }
+      break
   }
 }

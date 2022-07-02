@@ -17,43 +17,36 @@ import Icon from 'components/Icons/Icon'
 import { MenuPopup } from 'components/MenuPopup'
 import { Alert } from 'components/Alert'
 import Modal from 'components/Modal'
-const PostPage = ({ post, user: userConnected }) => {
+import { EditMode } from 'components/EditMode'
+import Notification from 'components/Notification'
+const PostPage = ({ post }) => {
   const router = useRouter()
-  const { user, userF420, setUserF420 } = useUser()
+  const { user, userF420, setUserF420, notify, setNotify } = useUser()
   const [comments, setComments] = useState([])
-  const [notify, setNotify] = React.useState('')
   const [openSettings, setOpenSettings] = React.useState(false)
   const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState()
+  const [editPostState, setEditPostState] = React.useState(false)
 
   const deletePost = async () => {
     //TODO: do the delete post logic after come back from smoke weed 🥦
     const resp = await fetch('/api/posts/post?id=' + post._id, {
       method: 'DELETE',
     })
+    const data = await resp.json()
+    if (data.success) {
+      setNotify('El post se a eliminado correctamente')
+    }
   }
 
   useEffect(() => {
-    if (!userConnected.user) {
-      router.push('/login')
+    if (post) {
+      setComments(post.comments)
     }
-  }, []) |
-    useEffect(() => {
-      if (post) {
-        setComments(post.comments)
-      }
-    }, [])
-
-  useEffect(() => {
-    if (notify) {
-      setTimeout(() => {
-        setNotify('')
-      }, 2500)
-    }
-  }, [notify])
+  }, [])
 
   return (
     <>
-      {userF420._id && (
+      {!editPostState ? (
         <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto'>
           <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
             <Image
@@ -69,31 +62,38 @@ const PostPage = ({ post, user: userConnected }) => {
               </h1>
             </div>
           </header>
-          <div className='relative w-full flex items-center justify-end px-3 py-2'>
-            <Icon
-              icon={'ri-settings-4-fill cursor-pointer'}
-              color='text-stone-400'
-              onClick={() => setOpenSettings(!openSettings)}
-            />
-            <AnimatePresence>
-              {openSettings && (
-                <MenuPopup right='right-16' top={'top-5'}>
-                  <p className='text-2xl cursor-pointer px-5 hover:bg-gray-200'>
-                    Editar publicación
-                  </p>
-                  <p
-                    onClick={() => {
-                      setOpenDeleteQuestion(true)
-                      setOpenSettings(false)
-                    }}
-                    className='text-2xl cursor-pointer px-5 hover:bg-gray-200'
-                  >
-                    Eliminar publicación
-                  </p>
-                </MenuPopup>
-              )}
-            </AnimatePresence>
-          </div>
+          {userF420._id && userF420._id === post.postedBy._id && (
+            <div className='relative w-full flex items-center justify-end px-3 py-2'>
+              <Icon
+                icon={'ri-settings-4-fill cursor-pointer'}
+                color='text-stone-400'
+                onClick={() => setOpenSettings(!openSettings)}
+              />
+              <AnimatePresence>
+                {openSettings && (
+                  <MenuPopup right='right-16' top={'top-5'}>
+                    <p
+                      onClick={() => {
+                        setEditPostState(!editPostState)
+                      }}
+                      className='text-2xl cursor-pointer px-5 hover:bg-gray-200'
+                    >
+                      Editar publicación
+                    </p>
+                    <p
+                      onClick={() => {
+                        setOpenDeleteQuestion(true)
+                        setOpenSettings(false)
+                      }}
+                      className='text-2xl cursor-pointer px-5 hover:bg-gray-200'
+                    >
+                      Eliminar publicación
+                    </p>
+                  </MenuPopup>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
           <div className='flex items-center bg-white shadow-sm max-w-fit px-5 py-1 rounded-md mt-6 ml-1'>
             <Image
               className='w-40 h-40 rounded-full mx-auto'
@@ -119,11 +119,15 @@ const PostPage = ({ post, user: userConnected }) => {
             <h2 className='text-center font-medium text-3xl mb-5'>
               Comentarios
             </h2>
-            <CreateComment
-              user={userF420}
-              postId={post._id}
-              setComments={setComments}
-            />
+            {userF420._id ? (
+              <CreateComment
+                user={userF420}
+                postId={post._id}
+                setComments={setComments}
+              />
+            ) : (
+              <p></p>
+            )}
             {comments.length ? (
               comments.map((comment, index) => (
                 <Comment
@@ -135,7 +139,6 @@ const PostPage = ({ post, user: userConnected }) => {
                   postId={post._id}
                   responses={comment.responses}
                   postedbyId={comment.postedBy._id}
-                  setNotify={setNotify}
                   setComments={setComments}
                 />
               ))
@@ -146,6 +149,8 @@ const PostPage = ({ post, user: userConnected }) => {
             )}
           </section>
         </main>
+      ) : (
+        <EditMode post={post} />
       )}
 
       {openDeleteQuestion && (
@@ -159,13 +164,7 @@ const PostPage = ({ post, user: userConnected }) => {
         </Modal>
       )}
 
-      {notify && (
-        <div className='fixed z-10 top-10 w-full flex items-center justify-center'>
-          <span className='p-7 bg-emerald-600 shadow-md rounded-md'>
-            <h3 className='text-2xl font-bold text-stone-50'>{notify}</h3>
-          </span>
-        </div>
-      )}
+      {notify && <Notification />}
     </>
   )
 }
@@ -176,9 +175,8 @@ export const getServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    const user = await getSession(context)
-
     const urlId = context.query.post
+    console.log('urlId', urlId)
     const post = JSON.parse(JSON.stringify(await PostSchema.findById(urlId)))
 
     if (!post) {
@@ -229,7 +227,6 @@ export const getServerSideProps = async (context) => {
     return {
       props: {
         post,
-        user,
       },
     }
   } catch (error) {

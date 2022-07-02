@@ -9,7 +9,7 @@ const UserProvider = ({ children }) => {
   const { data: session, status } = useSession()
   const [userSignInfo, setUserSignInfo] = React.useState({})
   const [userF420, setUserF420] = React.useState({})
-  const [notify, setNotify] = React.useState(null)
+  const [notify, setNotify] = React.useState('')
   const [notifies, setNotifies] = React.useState([])
   const setUserData = (userData) => setUserSignInfo(userData)
 
@@ -29,14 +29,14 @@ const UserProvider = ({ children }) => {
       )
       const data = await resp.json()
       if (!data?._id && router.asPath !== '/login') {
-        router.push('/welcome')
+        router.replace('/welcome')
       }
       setUserF420(data)
     }
     if (status === 'unauthenticated') {
       setUserF420({})
       setUserSignInfo({})
-      router.push('/login')
+      router.replace('/login', {})
     }
   }
 
@@ -46,9 +46,17 @@ const UserProvider = ({ children }) => {
 
   useEffect(() => {
     if (status === 'authenticated' && !userF420?._id) {
-      router.push('/welcome')
+      router.replace('/welcome')
     }
   }, [userF420])
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 300)
+    }
+  }, [notify])
 
   const value = {
     user: userSignInfo,

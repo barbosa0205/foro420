@@ -11,6 +11,7 @@ import UserSchema from 'models/F420User'
 import useUser from '../contexts/useUser'
 import { useRouter } from 'next/router'
 import CreatePostButton from '../components/CreatePostButton'
+import AlienBagEmpty from 'assets/SVG/alien-bag-empty.svg'
 
 //posts hardcoded for now
 
@@ -38,7 +39,7 @@ function Home({ postsToShow, questionsPosts }) {
               <ButtonBorder
                 borderColor={
                   postAnswerToggle === 'APORTES'
-                    ? 'border-green-600'
+                    ? 'border-emerald-600'
                     : 'border-gray-400'
                 }
                 text='APORTES'
@@ -48,7 +49,7 @@ function Home({ postsToShow, questionsPosts }) {
                     : 'text-gray-400'
                 }
                 otherStyles={
-                  postAnswerToggle === 'APORTES' ? 'bg-green-600' : ''
+                  postAnswerToggle === 'APORTES' ? 'bg-emerald-600' : ''
                 }
                 onClick={() => setPostAnswerToggle('APORTES')}
               />
@@ -56,7 +57,7 @@ function Home({ postsToShow, questionsPosts }) {
                 text='PREGUNTAS'
                 borderColor={
                   postAnswerToggle === 'PREGUNTAS'
-                    ? 'border-green-600'
+                    ? 'border-emerald-600'
                     : 'border-gray-400'
                 }
                 colorText={
@@ -65,7 +66,7 @@ function Home({ postsToShow, questionsPosts }) {
                     : 'text-gray-400'
                 }
                 otherStyles={
-                  postAnswerToggle === 'PREGUNTAS' ? 'bg-green-600' : ''
+                  postAnswerToggle === 'PREGUNTAS' ? 'bg-emerald-600' : ''
                 }
                 onClick={() => setPostAnswerToggle('PREGUNTAS')}
               />
@@ -77,7 +78,12 @@ function Home({ postsToShow, questionsPosts }) {
               {postsToShow.length > 0 ? (
                 postsToShow.map((post) => <Post key={post._id} data={post} />)
               ) : (
-                <p>No hay posts</p>
+                <div className='relative mx-auto  w-full flex flex-col items-center'>
+                  <AlienBagEmpty className='w-fit max-w-7xl' />
+                  <p className='text-center absolute text-emerald-600 -bottom-28 text-6xl font-bold'>
+                    No hay posts para mostrar
+                  </p>
+                </div>
               )}
             </>
           ) : (
@@ -88,7 +94,12 @@ function Home({ postsToShow, questionsPosts }) {
                   <Post key={post._id} data={post} />
                 ))
               ) : (
-                <p>No hay posts</p>
+                <div className='relative mx-auto  w-full flex flex-col items-center'>
+                  <AlienBagEmpty className='w-fit max-w-7xl' />
+                  <p className='text-center absolute text-emerald-600 -bottom-36 text-6xl font-bold'>
+                    No hay preguntas para mostrar
+                  </p>
+                </div>
               )}
             </>
           )}

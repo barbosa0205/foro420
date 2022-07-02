@@ -26,6 +26,7 @@ import ButtonPrimary from 'components/ButtonPrimary'
 import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
 import { dbConnect } from 'utils/mongoose'
+import { privateRoutes } from 'helpers/privateRoutes'
 const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
   const router = useRouter()
@@ -63,11 +64,9 @@ const CreatePost = ({ categories, types }) => {
   const { userF420, setUserF420 } = useUser()
 
   useEffect(() => {
-    ;(async () => {
-      if (status === 'unauthenticated') {
-        router.push('/login')
-      }
-    })()
+    if (status === 'authenticated' && !userF420._id) {
+      router.replace('/login')
+    }
   }, [])
 
   useEffect(() => {
@@ -263,6 +262,7 @@ export const getServerSideProps = async (ctx) => {
   try {
     await dbConnect()
     //get all categories
+
     let categories = await CategorySchema.find({})
 
     let types = await TypeSchema.find({})

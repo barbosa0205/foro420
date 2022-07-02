@@ -2,8 +2,8 @@ import React from 'react'
 
 const ButtonBorder = ({
   text,
-  borderColor = 'border-green-600',
-  colorText = 'text-green-600',
+  borderColor = 'border-emerald-600',
+  colorText = 'text-emerald-600',
   icon = '',
   otherStyles = '',
   ...rest
