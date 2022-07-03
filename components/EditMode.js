@@ -13,7 +13,7 @@ import Post from 'pages/posts/[post]'
 import Notification from './Notification'
 import { AnimatePresence } from 'framer-motion'
 
-export const EditMode = ({ setEditPostState, post }) => {
+export const EditMode = ({ setEditData, setEditPostState, post }) => {
   const { userF420, setNotify, notify } = useUser()
   const editorRef = useRef(null)
   const [content, setContent] = useState('')
@@ -98,6 +98,13 @@ export const EditMode = ({ setEditPostState, post }) => {
       })
       const data = await resp.json()
       if (data.success) {
+        setEditData({
+          title: postData.title,
+          image: postData.image,
+          content: postData.content,
+          category: postData.category,
+          type: postData.type,
+        })
         setNotify('Post Editado correctamente')
       }
     } catch (error) {

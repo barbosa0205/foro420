@@ -82,6 +82,10 @@ a {
   max-height: 30rem;
 }
 
+.maxImageWidth {
+  max-width: 10rem;
+}
+
 .shadowLogo {
   text-shadow: 0.4rem 0.1rem 0.1rem #004637, -0.6rem -0.1rem 0 #004637;
 }

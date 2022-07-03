@@ -6,24 +6,29 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Icon from './Icons/Icon'
 import useUser from 'contexts/useUser'
 
-const Post = ({ data }) => {
+const Post = ({ likedPost, data }) => {
   const router = useRouter()
-  const { userF420 } = useUser()
+  const { userF420, user } = useUser()
   const [likes, setLikes] = React.useState(data.likes)
+  const [postLiked, setPostLiked] = React.useState(likedPost)
 
   const like = async () => {
     try {
-      const resp = await fetch(
-        `/api/posts/likes?id=${data._id}&uid=${userF420._id}&likes=${likes}`,
-        {
-          method: 'PUT',
+      if (user.email && userF420?._id) {
+        const resp = await fetch(
+          `/api/posts/likes?id=${data._id}&uid=${userF420._id}&likes=${likes}`,
+          {
+            method: 'PUT',
+          }
+        )
+        const dta = await resp.json()
+        console.log('dta', dta)
+        if (dta.success) {
+          setLikes(Number(dta.newLikes))
+          setPostLiked(dta.isLiked)
         }
-      )
-      const dta = await resp.json()
-      console.log('dta', dta)
-      if (dta.success) {
-        console.log(dta.newLikes)
-        setLikes(Number(dta.newLikes))
+      } else {
+        router.push('/login')
       }
     } catch (error) {
       console.error(error)
@@ -53,9 +58,6 @@ const Post = ({ data }) => {
                 width={100}
                 height={100}
                 className='rounded-lg cursor-pointer object-cover'
-                style={{
-                  maxWidth: '10rem',
-                }}
                 priority={true}
                 onClick={() => {
                   router.push(`/posts/${data._id}`)
@@ -103,7 +105,12 @@ const Post = ({ data }) => {
                   onClick={like}
                   className='flex items-center justify-center mx-1 px-2 bg-white shadow-sm shadow-gray-200 rounded-md'
                 >
-                  <Icon icon={'ri-thumb-up-line'} color='text-emerald-600' />
+                  <Icon
+                    icon={`${
+                      postLiked ? 'ri-thumb-up-fill' : 'ri-thumb-up-line'
+                    }`}
+                    color='text-emerald-600'
+                  />
                   <p className='px-2 text-emerald-700'>{likes}</p>
                 </button>
 

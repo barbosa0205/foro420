@@ -35,6 +35,7 @@ export default async function handler(req, res) {
           )
           res.status(200).json({
             success: true,
+            isLiked: true,
             newLikes: Number(query.likes) + 1,
           })
         } else {
@@ -62,7 +63,7 @@ export default async function handler(req, res) {
           console.log('newLikes', Number(query.likes) - 1)
           res.status(200).json({
             success: true,
-
+            isLiked: false,
             newLikes: Number(query.likes) - 1,
           })
         }

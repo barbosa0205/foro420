@@ -21,11 +21,18 @@ import { EditMode } from 'components/EditMode'
 import Notification from 'components/Notification'
 const PostPage = ({ post }) => {
   const router = useRouter()
-  const { user, userF420, setUserF420, notify, setNotify } = useUser()
+  const { user, userF420, setUserF420, setNotify } = useUser()
   const [comments, setComments] = useState([])
   const [openSettings, setOpenSettings] = React.useState(false)
   const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState()
   const [editPostState, setEditPostState] = React.useState(false)
+  const [editData, setEditData] = React.useState({
+    image: post.image,
+    title: post.title,
+    content: post.content,
+    category: post.category,
+    type: post.type,
+  })
 
   const deletePost = async () => {
     //TODO: do the delete post logic after come back from smoke weed 🥦
@@ -50,7 +57,7 @@ const PostPage = ({ post }) => {
         <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto'>
           <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
             <Image
-              src={post.image}
+              src={editData.image}
               alt={'portada'}
               layout='fill'
               objectFit='cover'
@@ -58,11 +65,11 @@ const PostPage = ({ post }) => {
 
             <div className='z-10 absolute right-0 bottom-0 w-fit bg-black rounded-sm bg-opacity-40'>
               <h1 className=' text-right font-semibold text-3xl px-2 pt-5 text-gray-50 text-opacity-100'>
-                {post.title}
+                {editData.title}
               </h1>
             </div>
           </header>
-          {userF420._id && userF420._id === post.postedBy._id && (
+          {userF420?._id && userF420._id === post.postedBy._id && (
             <div className='relative w-full flex items-center justify-end px-3 py-2'>
               <Icon
                 icon={'ri-settings-4-fill cursor-pointer'}
@@ -112,14 +119,14 @@ const PostPage = ({ post }) => {
           </div>
 
           <section className='w-full bg-white px-2 pb-5 rounded-lg mt-5'>
-            <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+            <div dangerouslySetInnerHTML={{ __html: editData.content }}></div>
           </section>
           <hr />
           <section className='w-full pt-2 mt-14 bg-white'>
             <h2 className='text-center font-medium text-3xl mb-5'>
               Comentarios
             </h2>
-            {userF420._id ? (
+            {user?.email && userF420?._id ? (
               <CreateComment
                 user={userF420}
                 postId={post._id}
@@ -150,7 +157,11 @@ const PostPage = ({ post }) => {
           </section>
         </main>
       ) : (
-        <EditMode post={post} setEditPostState={setEditPostState} />
+        <EditMode
+          post={post}
+          setEditPostState={setEditPostState}
+          setEditData={setEditData}
+        />
       )}
 
       {openDeleteQuestion && (
