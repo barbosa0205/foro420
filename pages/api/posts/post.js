@@ -49,6 +49,9 @@ export default async function handler(req, res) {
             ...body.data,
           }
         )
+        res.status(200).json({
+          success: true,
+        })
       } catch (error) {
         console.log('ERROR AL OBTENER POST', error)
         return res.status(500).json({ message: 'Error al obtener el post' })

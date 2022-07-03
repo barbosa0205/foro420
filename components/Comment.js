@@ -16,10 +16,9 @@ const Comment = ({
   responses,
   commentId,
   postedbyId,
-  setNotify,
   setComments,
 }) => {
-  const { userF420 } = useUser()
+  const { userF420, setNotify } = useUser()
   const [openCreateresp, setOpenCreateResp] = React.useState(false)
   const [responsesPublished, setResponsesPublished] = React.useState([])
   const [responsesLength, setResponsesLength] = React.useState(responses.length)
@@ -70,6 +69,7 @@ const Comment = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        postId,
         id: commentId,
         responses,
       }),

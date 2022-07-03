@@ -154,11 +154,11 @@ const CreatePost = ({ categories, types }) => {
           />
         )}
       </section>
-      <div className='w-full max-w-7xl mt-10 '>
-        <input
+      <div className='w-full flex flex-wrap max-w-7xl mt-10 '>
+        <textarea
           type={'text'}
           placeholder='TU TITULO AQUI 👽'
-          className='w-full bg-transparent text-5xl outline-none mb-3 pl-5'
+          className='w-full bg-transparent text-5xl outline-none mb-3 pl-5 resize-none'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -183,6 +183,7 @@ const CreatePost = ({ categories, types }) => {
             resize: true,
             resize_img_proportional: false,
             height: '60rem',
+            width: '100%',
             selector: '#editor',
             menubar: false,
             plugins: [

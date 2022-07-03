@@ -50,14 +50,6 @@ const UserProvider = ({ children }) => {
     }
   }, [userF420])
 
-  useEffect(() => {
-    if (notify) {
-      setTimeout(() => {
-        setNotify('')
-      }, 300)
-    }
-  }, [notify])
-
   const value = {
     user: userSignInfo,
     userF420,

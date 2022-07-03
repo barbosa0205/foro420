@@ -10,9 +10,11 @@ import ImageModal from './ImageModal'
 import useUser from 'contexts/useUser'
 import { createPostErrors } from 'helpers/createPostErrors'
 import Post from 'pages/posts/[post]'
+import Notification from './Notification'
+import { AnimatePresence } from 'framer-motion'
 
-export const EditMode = ({ post }) => {
-  const { userF420 } = useUser()
+export const EditMode = ({ setEditPostState, post }) => {
+  const { userF420, setNotify, notify } = useUser()
   const editorRef = useRef(null)
   const [content, setContent] = useState('')
   const [value, setValue] = useState(post.content)
@@ -95,11 +97,21 @@ export const EditMode = ({ post }) => {
         }),
       })
       const data = await resp.json()
-      console.log('data', data)
+      if (data.success) {
+        setNotify('Post Editado correctamente')
+      }
     } catch (error) {
       console.error(error)
     }
   }
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 2000)
+    }
+  }, [notify])
 
   return (
     <div className='w-full min-w-fit min-h-screen flex flex-col items-center'>
@@ -128,10 +140,10 @@ export const EditMode = ({ post }) => {
         />
       )}
       <div className='w-full max-w-7xl mt-10 '>
-        <input
+        <textarea
           type={'text'}
           placeholder='TU TITULO AQUI 👽'
-          className='w-full bg-transparent text-5xl outline-none mb-3 pl-5'
+          className='w-full bg-transparent text-5xl outline-none mb-3 pl-5 resize-none'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -241,12 +253,24 @@ export const EditMode = ({ post }) => {
       <div className='w-full flex items-center justify-center'>
         <ButtonPrimary
           text={'EDITAR POST'}
-          bgColor='bg-green-600'
+          bgColor='bg-emerald-600 hover:bg-emerald-700'
           color='text-gray-50'
           otherStyle={'mt-10'}
           onClick={editPost}
         />
+        <ButtonPrimary
+          text={'Salir del modo edición'}
+          bgColor='bg-rose-500 hover:bg-rose-600'
+          color='text-gray-50'
+          otherStyle={'mt-10'}
+          onClick={() => setEditPostState(false)}
+        />
       </div>
+      {notify && (
+        <AnimatePresence>
+          <Notification text={notify} />
+        </AnimatePresence>
+      )}
     </div>
   )
 }

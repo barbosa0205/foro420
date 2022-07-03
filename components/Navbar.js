@@ -83,7 +83,7 @@ const Navbar = () => {
                         to={`/`}
                         onClick={() => {
                           setShowSide(false)
-                          router.push('/create-post')
+                          router.push('/')
                         }}
                       />
                       <LinkItem

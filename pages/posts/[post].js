@@ -150,7 +150,7 @@ const PostPage = ({ post }) => {
           </section>
         </main>
       ) : (
-        <EditMode post={post} />
+        <EditMode post={post} setEditPostState={setEditPostState} />
       )}
 
       {openDeleteQuestion && (
@@ -163,8 +163,6 @@ const PostPage = ({ post }) => {
           />
         </Modal>
       )}
-
-      {notify && <Notification />}
     </>
   )
 }

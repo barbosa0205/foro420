@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import useUser from 'contexts/useUser'
 const Welcome = () => {
   const router = useRouter()
-  const { user, userF420, setUserData } = useUser()
+  const { user, userF420, setUserF420 } = useUser()
   const [formValues, handleFormValuesChange, validateErrorSubmit, errors] =
     UseForm(
       {
@@ -68,6 +68,7 @@ const Welcome = () => {
       console.log(data)
       if (data.success) {
         setDataError([])
+        setUserF420(data.user)
         router.push('/')
       } else {
         if (data.error.keyValue?.username) {

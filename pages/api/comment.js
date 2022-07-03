@@ -86,6 +86,21 @@ export default async function handler(req, res) {
           const commentDeleted = await CommentSchema.deleteOne({
             _id: body.id,
           })
+
+          const post = await PostSchema.findOne({
+            _id: body.postId,
+          })
+
+          const newComments = post.comments.filter((c) => c === body.id)
+
+          await PostSchema.findOneAndUpdate(
+            {
+              _id: body.postId,
+            },
+            {
+              comments: newComments,
+            }
+          )
           res.status(200).json({
             success: true,
             message: 'Comentario eliminado correctamente',
