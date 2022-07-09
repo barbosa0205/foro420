@@ -43,6 +43,6 @@ connection.on('connected', () => {
 })
 
 connection.on('error', (err) => {
-  console.error(err)
+  console.error('ERROR NO PUEDE SER: ', err)
   process.exit(1)
 })
