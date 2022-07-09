@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Post from 'components/post'
+import Post from 'components/Post'
 import Container from '../components/Container'
 import ButtonBorder from 'components/ButtonBorder'
 import { dbConnect } from '../utils/mongoose'
