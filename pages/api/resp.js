@@ -21,8 +21,6 @@ export default async function handler(req, res) {
 
           responses = await Promise.all(responses)
 
-          console.log(responses)
-
           return res.status(200).json({
             responses,
           })

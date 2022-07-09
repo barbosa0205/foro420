@@ -12,10 +12,9 @@ import userImageDefault from 'assets/default_user.jpg'
 
 import useUser from 'contexts/useUser'
 import LinkItem from './LinkItem'
-import Notification from './Notification'
 
 const Navbar = () => {
-  const { user, userF420, notify } = useUser()
+  const { user, userF420, notify, setNotify } = useUser()
   const router = useRouter()
 
   const { height, width } = useWindowDimensions()
@@ -28,11 +27,8 @@ const Navbar = () => {
         {showSide && (
           <motion.div
             initial={{
-              x: '-50%',
-              opacity: 0,
-            }}
-            exit={{
-              x: '-50%',
+              x: width >= 768 ? '0' : '-50%',
+              y: width >= 768 ? '-10' : '0',
               opacity: 0,
             }}
             animate={{
@@ -42,6 +38,11 @@ const Navbar = () => {
             transition={{
               duration: 0.1,
               type: 'just',
+            }}
+            exit={{
+              x: width >= 768 ? '0' : '-50%',
+              y: width >= 768 ? '-10' : '0',
+              opacity: 0,
             }}
             className=' w-full h-screen fixed z-20'
             onClick={() => setShowSide(false)}
@@ -161,7 +162,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <nav className='relative flex items-center justify-between lg:justify-around px-5  w-full min-w-fit h-24 sm:h-28 bg-gradient-to-tl from-emerald-600 to-emerald-500'>
+      <nav className='relative flex items-center justify-between lg:justify-around px-5  w-full h-24 py-2 sm:h-32 bg-gradient-to-tl from-emerald-600 to-emerald-500'>
         <div className='flex items-center justify-evenly w-fit'>
           <Icon
             icon='ri-menu-fill cursor-pointer md:hidden'
@@ -183,24 +184,25 @@ const Navbar = () => {
             onClick={() => {
               setShowSide(true)
             }}
-            className='relative md:flex flex-col h-full items-center justify-center mt-2 mr-10 border-gray-300 hidden cursor-pointer'
+            className='relative w-fit  md:flex flex-col items-center justify-center mt-5 mr-10 border-gray-300 hidden cursor-pointer'
           >
             <Image
               src={userF420?.image || user?.image || userImageDefault}
               alt='profile'
               width={50}
               height={50}
-              className='rounded-full border-8'
+              size='cover'
+              className='rounded-full'
             />
             <i className='ri-arrow-drop-down-line absolute -right-4 bottom-12 text-5xl text-gray-50'></i>
-            <h3 className='font-semibold text-gray-50'>
+            <h3 className='font-semibold text-gray-50 p-0'>
               {userF420 && userF420?.username}
             </h3>
           </section>
           <Notify styles={'mr-5'} />
         </div>
       </nav>
-      {notify && <Notification data={notify} />}
+      <AnimatePresence></AnimatePresence>
     </>
   )
 }

@@ -12,11 +12,10 @@ import useUser from '../contexts/useUser'
 import { useRouter } from 'next/router'
 import CreatePostButton from '../components/CreatePostButton'
 import AlienBagEmpty from 'assets/SVG/alien-bag-empty.svg'
-import { getSession } from 'next-auth/react'
 
 //posts hardcoded for now
 
-function Home({ postLiked, postsToShow, questionsPosts }) {
+function Home({ postsToShow, questionsPosts }) {
   const router = useRouter()
   const { user, setUserData, setUserF420 } = useUser()
 
@@ -77,9 +76,7 @@ function Home({ postLiked, postsToShow, questionsPosts }) {
             <>
               {/* Posts contaienr */}
               {postsToShow.length > 0 ? (
-                postsToShow.map((post) => (
-                  <Post key={post._id} data={post} likedPost={postLiked} />
-                ))
+                postsToShow.map((post) => <Post key={post._id} data={post} />)
               ) : (
                 <div className='relative mx-auto  w-full flex flex-col items-center'>
                   <AlienBagEmpty className='w-fit max-w-7xl' />
@@ -94,7 +91,7 @@ function Home({ postLiked, postsToShow, questionsPosts }) {
               {/*answers container */}
               {questionsPosts.length > 0 ? (
                 questionsPosts.map((post) => (
-                  <Post key={post._id} data={post} likedPost={postLiked} />
+                  <Post key={post._id} data={post} />
                 ))
               ) : (
                 <div className='relative mx-auto  w-full flex flex-col items-center'>
@@ -128,26 +125,12 @@ export const getServerSideProps = async (context) => {
       })
       .limit(30)
 
-    let postLiked
-
     //get category, type and postedBy for each post
     postsToShow = await Promise.all(
       postsToShow.map(async (post) => {
         const category = await CategorySchema.findById(post.category)
         const type = await TypeSchema.findById(post.type)
         const postedBy = await UserSchema.findById(post.postedBy)
-
-        const session = await getSession(context)
-
-        const user = await UserSchema.findOne({
-          email: session.user.email,
-        })
-
-        if (user.postsLiked) {
-          postLiked = user.postsLiked.includes(post._id)
-        }
-
-        postLiked = JSON.parse(JSON.stringify(postLiked))
 
         post.category = category
         post.type = type
@@ -193,7 +176,6 @@ export const getServerSideProps = async (context) => {
       props: {
         postsToShow,
         questionsPosts,
-        postLiked,
       },
     }
   } catch (error) {

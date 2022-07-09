@@ -53,6 +53,18 @@ const User = new Schema(
         ref: 'Post',
       },
     ],
+    postsSaved: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
+    postsFav: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
     friends: [
       {
         type: String,

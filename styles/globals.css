@@ -44,7 +44,7 @@
 * {
   --main-green: #00a65a;
   --border-green: #009b55;
-  --low-gray: #f3f4f6;
+  --low-gray: #f6f6f6;
   --dark: #000a06;
   box-sizing: border-box;
   margin: 0;
@@ -66,11 +66,65 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: var(--low-gray);
+  color: #303030;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.contentStyles h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  padding: 1rem;
+}
+
+.contentStyles h1 {
+  font-size: 3rem;
+}
+
+.contentStyles h2 {
+  font-size: 2.6rem;
+}
+
+.contentStyles h3 {
+  font-size: 2.1rem;
+}
+
+.contentStyles h4 {
+  font-size: 3rem;
+}
+
+.contentStyles h5 {
+  font-size: 1.7rem;
+}
+
+.contentStyles h6 {
+  font-size: 1.5rem;
+}
+
+.contentStyles ul,
+ol {
+  padding-left: 2rem;
+  margin: 1rem 1rem 2rem 1rem;
+}
+
+.contentStyles ul > li {
+  list-style: disc;
+}
+.contentStyles ol > li {
+  list-style: decimal;
+}
+
+.contentStyles tr,
+td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 0 0.5rem 0;
 }
 
 .coverimage {

@@ -15,7 +15,7 @@ const Notification = ({ text }) => {
       exit={{
         y: -100,
       }}
-      className='w-full fixed top-0 left-0 flex items-center justify-center mt-5'
+      className='w-fit fixed top-0 left-0 right-0 mx-auto flex items-center justify-center mt-5'
     >
       <h2 className='px-5 py-2 bg-white text-emerald-600 rounded-lg shadow-sm font-semibold text-4xl'>
         {text}

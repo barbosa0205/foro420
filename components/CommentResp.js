@@ -56,7 +56,7 @@ const CommentResp = ({
       }),
     })
     const data = await resp.json()
-    console.log(data)
+
     if (data.success) {
       setNotify(data.message)
       setResponsesToShow((resp) => {

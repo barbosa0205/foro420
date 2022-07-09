@@ -12,15 +12,17 @@ import { createPostErrors } from 'helpers/createPostErrors'
 import Post from 'pages/posts/[post]'
 import Notification from './Notification'
 import { AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/router'
 
 export const EditMode = ({ setEditData, setEditPostState, post }) => {
+  const router = useRouter()
   const { userF420, setNotify, notify } = useUser()
   const editorRef = useRef(null)
   const [content, setContent] = useState('')
   const [value, setValue] = useState(post.content)
   const [title, setTitle] = useState(post.title)
-  const [categories, setCategories] = useState(null)
-  const [types, setTypes] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [types, setTypes] = useState([])
   const [subcategories, setSubcategories] = useState([])
   const [imagesModal, setImagesModal] = useState(false)
   const [coverImage, setCoverImage] = useState({
@@ -45,6 +47,9 @@ export const EditMode = ({ setEditData, setEditPostState, post }) => {
   const [errors, setErrors] = useState([])
 
   useEffect(() => {
+    if (router.asPath === '/posts/[post]') {
+      router.replace('/')
+    }
     getTypesAndCategories()
   }, [])
 
@@ -62,7 +67,7 @@ export const EditMode = ({ setEditData, setEditPostState, post }) => {
       const postData = {
         id: post._id,
         title,
-        content: value,
+        content,
         image: coverImage.src,
         postedBy: userF420._id,
         category: categorySelect._id,
@@ -121,7 +126,7 @@ export const EditMode = ({ setEditData, setEditPostState, post }) => {
   }, [notify])
 
   return (
-    <div className='w-full min-w-fit min-h-screen flex flex-col items-center'>
+    <div className='w-full min-w-fit min-h-screen flex flex-col items-center px-2 bg-white'>
       <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
         <div
           onClick={() => setImagesModal(true)}
@@ -186,9 +191,10 @@ export const EditMode = ({ setEditData, setEditPostState, post }) => {
               'table',
               'autosave',
               'fullscreen',
+              'media',
             ],
             toolbar:
-              'undo redo | styles | bold italic | link | emoticons | image | numlist bullist | paste | table | fullscreen',
+              'undo redo | styles | bold italic | link | emoticons | image | numlist bullist | paste | table | fullscreen | media',
             min_width: 320,
           }}
           onInit={(event, editor) => (editorRef.current = editor)}

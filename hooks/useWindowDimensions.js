@@ -9,12 +9,16 @@ const useWindowDimensions = () => {
   }
 
   React.useEffect(() => {
+    if (!windowDimensions?.width) {
+      handleResize()
+    }
+    window.addEventListener('resize', handleResize)
     function handleResize() {
       setWindowDimensions(getWidthDimensions())
     }
-    window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  })
+  }, [])
+
   return windowDimensions
 }
 

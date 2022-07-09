@@ -5,35 +5,46 @@ import React, { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Icon from './Icons/Icon'
 import useUser from 'contexts/useUser'
-
-const Post = ({ likedPost, data }) => {
+import like from 'helpers/likePost'
+import savePost from 'helpers/savePost'
+import Notification from './Notification'
+const Post = ({ data }) => {
   const router = useRouter()
-  const { userF420, user } = useUser()
+  const { userF420, user, notify, setNotify } = useUser()
   const [likes, setLikes] = React.useState(data.likes)
-  const [postLiked, setPostLiked] = React.useState(likedPost)
+  const [postLiked, setPostLiked] = React.useState(false)
+  const [postSaved, setPostSaved] = React.useState(false)
+  const [noMore, setNoMore] = React.useState(false)
 
-  const like = async () => {
+  const verifyLikeAndSave = async () => {
     try {
-      if (user.email && userF420?._id) {
-        const resp = await fetch(
-          `/api/posts/likes?id=${data._id}&uid=${userF420._id}&likes=${likes}`,
-          {
-            method: 'PUT',
-          }
-        )
-        const dta = await resp.json()
-        console.log('dta', dta)
-        if (dta.success) {
-          setLikes(Number(dta.newLikes))
-          setPostLiked(dta.isLiked)
-        }
-      } else {
-        router.push('/login')
+      const resp = await fetch(
+        `/api/posts/post-liked-or-saved?uid=${userF420._id}&id=${data._id}`
+      )
+      const { success, likedPost, savedPost } = await resp.json()
+      if (success) {
+        setPostLiked(likedPost)
+        setPostSaved(savedPost)
       }
     } catch (error) {
-      console.error(error)
+      console.log('error en Post', error)
     }
   }
+
+  useEffect(() => {
+    if (userF420?._id && !noMore) {
+      verifyLikeAndSave()
+      setNoMore(true)
+    }
+  }, [userF420])
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 2500)
+    }
+  }, [notify])
 
   return (
     <>
@@ -49,7 +60,7 @@ const Post = ({ likedPost, data }) => {
             transition={{
               type: 'just',
             }}
-            className='postArticle flex items-center w-full min-h-min max-h-44 p-2 rounded-xl bg-gray-50 overflow-hidden hover:bg-stone-100'
+            className='postArticle flex items-center w-full min-h-fit max-h-44 p-2 rounded-xl bg-white overflow-hidden hover:bg-gray-50'
           >
             <div className='flex justify-center items-center max-w-xs min-w-fit'>
               <Image
@@ -100,9 +111,19 @@ const Post = ({ likedPost, data }) => {
                 </Link>
               </div>
               {/*footer container*/}
-              <footer className='w-fit flex justify-evenly items-center'>
+              <footer className='w-fit flex justify-evenly items-center pb-2'>
                 <button
-                  onClick={like}
+                  onClick={() =>
+                    like(
+                      data,
+                      user,
+                      userF420,
+                      setLikes,
+                      setPostLiked,
+                      router,
+                      likes
+                    )
+                  }
                   className='flex items-center justify-center mx-1 px-2 bg-white shadow-sm shadow-gray-200 rounded-md'
                 >
                   <Icon
@@ -114,16 +135,32 @@ const Post = ({ likedPost, data }) => {
                   <p className='px-2 text-emerald-700'>{likes}</p>
                 </button>
 
-                <Icon
+                {/* <Icon
                   icon='ri-share-box-fill'
                   color='text-gray-600 text-3xl cursor-pointer'
-                />
+                /> */}
                 <Icon
-                  icon='ri-bookmark-line'
-                  color='text-gray-600 text-3xl cursor-pointer'
-                />
-                <Icon
-                  icon='ri-star-line'
+                  onClick={async () => {
+                    const dta = await savePost(data, user, userF420, router)
+                    if (dta === undefined) {
+                      return
+                    } else {
+                      if (dta.success) {
+                        if (dta.postUnsaved) {
+                          setPostSaved(false)
+                          setNotify(
+                            'Post removido de tus guardados correctamente'
+                          )
+                        } else {
+                          setPostSaved(true)
+                          setNotify('Post guardado correctamente')
+                        }
+                      }
+                    }
+                  }}
+                  icon={`${
+                    postSaved ? 'ri-bookmark-fill' : 'ri-bookmark-line'
+                  }`}
                   color='text-gray-600 text-3xl cursor-pointer'
                 />
               </footer>
@@ -132,6 +169,8 @@ const Post = ({ likedPost, data }) => {
         </AnimatePresence>
       )}
       <hr />
+
+      {notify && <Notification text={notify} />}
     </>
   )
 }

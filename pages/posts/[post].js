@@ -19,13 +19,18 @@ import { Alert } from 'components/Alert'
 import Modal from 'components/Modal'
 import { EditMode } from 'components/EditMode'
 import Notification from 'components/Notification'
-const PostPage = ({ post }) => {
+import like from 'helpers/likePost'
+import savePost from 'helpers/savePost'
+const PostPage = ({ post, postLiked: likedPost }) => {
   const router = useRouter()
-  const { user, userF420, setUserF420, setNotify } = useUser()
+  const { user, userF420, setUserF420, notify, setNotify } = useUser()
   const [comments, setComments] = useState([])
   const [openSettings, setOpenSettings] = React.useState(false)
-  const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState()
+  const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState(false)
   const [editPostState, setEditPostState] = React.useState(false)
+  const [likes, setLikes] = React.useState(post.likes)
+  const [postLiked, setPostLiked] = React.useState(likedPost)
+
   const [editData, setEditData] = React.useState({
     image: post.image,
     title: post.title,
@@ -40,21 +45,16 @@ const PostPage = ({ post }) => {
       method: 'DELETE',
     })
     const data = await resp.json()
-    if (data.success) {
+    if (data.succes) {
       setNotify('El post se a eliminado correctamente')
+      router.replace('/')
     }
   }
-
-  useEffect(() => {
-    if (post) {
-      setComments(post.comments)
-    }
-  }, [])
 
   return (
     <>
       {!editPostState ? (
-        <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto'>
+        <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto bg-white px-2'>
           <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
             <Image
               src={editData.image}
@@ -101,7 +101,7 @@ const PostPage = ({ post }) => {
               </AnimatePresence>
             </div>
           )}
-          <div className='flex items-center bg-white shadow-sm max-w-fit px-5 py-1 rounded-md mt-6 ml-1'>
+          <section className='flex items-center bg-white shadow-sm max-w-fit px-5 py-1 rounded-md mt-6 ml-1'>
             <Image
               className='w-40 h-40 rounded-full mx-auto'
               width={60}
@@ -116,10 +116,59 @@ const PostPage = ({ post }) => {
                 {post.postedBy.username}
               </a>
             </Link>
-          </div>
+          </section>
+
+          <section className='w-fit flex justify-evenly items-center mt-3 mx-1 bg-white py-2 pr-2'>
+            <button
+              onClick={() =>
+                like(
+                  post,
+                  user,
+                  userF420,
+                  setLikes,
+                  setPostLiked,
+                  router,
+                  likes
+                )
+              }
+              className='flex items-center justify-center bg-white rounded-md'
+            >
+              <Icon
+                icon={`${postLiked ? 'ri-thumb-up-fill' : 'ri-thumb-up-line'}`}
+                color='text-emerald-600'
+              />
+              <p className='px-2 text-emerald-700'>{likes}</p>
+            </button>
+            {/* 
+            <Icon
+              icon='ri-share-box-fill'
+              color='text-gray-600 text-3xl cursor-pointer'
+            /> */}
+            <Icon
+              onClick={async () => {
+                const dta = await savePost(post, user, userF420, router)
+                if (dta === undefined) {
+                  return
+                } else {
+                  if (dta.success) {
+                    if (dta.postUnsaved) {
+                      setNotify('Post removido de tus guardados correctamente')
+                    } else {
+                      setNotify('Post guardado correctamente')
+                    }
+                  }
+                }
+              }}
+              icon='ri-bookmark-line'
+              color='text-gray-600 text-3xl cursor-pointer'
+            />
+          </section>
 
           <section className='w-full bg-white px-2 pb-5 rounded-lg mt-5'>
-            <div dangerouslySetInnerHTML={{ __html: editData.content }}></div>
+            <div
+              className='contentStyles'
+              dangerouslySetInnerHTML={{ __html: editData.content }}
+            ></div>
           </section>
           <hr />
           <section className='w-full pt-2 mt-14 bg-white'>
@@ -158,7 +207,10 @@ const PostPage = ({ post }) => {
         </main>
       ) : (
         <EditMode
-          post={post}
+          post={{
+            ...post,
+            ...editData,
+          }}
           setEditPostState={setEditPostState}
           setEditData={setEditData}
         />
@@ -174,6 +226,7 @@ const PostPage = ({ post }) => {
           />
         </Modal>
       )}
+      {notify && <Notification text={notify} />}
     </>
   )
 }
@@ -186,7 +239,8 @@ export const getServerSideProps = async (context) => {
 
     const urlId = context.query.post
     console.log('urlId', urlId)
-    const post = JSON.parse(JSON.stringify(await PostSchema.findById(urlId)))
+
+    let post = JSON.parse(JSON.stringify(await PostSchema.findById(urlId)))
 
     if (!post) {
       return {
@@ -205,6 +259,23 @@ export const getServerSideProps = async (context) => {
       JSON.stringify(await TypeSchema.findById(post.type))
     )
 
+    let postLiked = null
+
+    const session = await getSession(context)
+
+    if (session) {
+      const user = await UserSchema.findOne({
+        email: session.user.email,
+      })
+
+      if (user) {
+        if (user.postsLiked) {
+          postLiked = user.postsLiked.includes(post._id)
+        }
+
+        postLiked = JSON.parse(JSON.stringify(postLiked))
+      }
+    }
     const commentsPromise = post.comments.map(async (comment) => {
       let newComment = await CommentSchema.findOne({
         _id: comment,
@@ -236,6 +307,7 @@ export const getServerSideProps = async (context) => {
     return {
       props: {
         post,
+        postLiked,
       },
     }
   } catch (error) {

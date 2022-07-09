@@ -6,13 +6,12 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        console.log('uid', uid)
         const user = await UserSchema.findOne({
           _id: query.uid,
         })
 
         const userLikePost = user.comments.find((id) => id === query.id)
-        console.log('userLikePost', userLikePost)
+
         res.status(200).json({ success: true, postLiked: userLikePost })
       } catch (error) {
         console.log('error', error)

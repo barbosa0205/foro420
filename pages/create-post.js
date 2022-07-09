@@ -61,17 +61,13 @@ const CreatePost = ({ categories, types }) => {
   })
 
   const [errors, setErrors] = useState([])
-  const { userF420, setUserF420 } = useUser()
+  const { userF420, setUserF420, notify, setNotify } = useUser()
 
   useEffect(() => {
     if (status === 'authenticated' && !userF420._id) {
       router.replace('/login')
     }
   }, [])
-
-  useEffect(() => {
-    console.log('subSelect', subSelect)
-  }, [subSelect])
 
   useEffect(() => {
     const randomNumber = Math.floor(Math.random() * (8 - 2 + 1) + 2)
@@ -100,6 +96,14 @@ const CreatePost = ({ categories, types }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 2500)
+    }
+  }, [notify])
+
   const uploadPost = async () => {
     try {
       const postData = {
@@ -125,14 +129,16 @@ const CreatePost = ({ categories, types }) => {
         //SEND DATA IN JSON FORMAT
         body: JSON.stringify(postData),
       })
-      console.log('post', post)
+      const postDta = await post.json()
+      setNotify('Post creado correctamente')
+      console.log('post', postDta._id)
     } catch (error) {
       console.error(error)
     }
   }
 
   return (
-    <main className='w-full min-w-fit min-h-screen flex flex-col items-center'>
+    <main className='w-full min-w-fit min-h-screen flex flex-col items-center max-w-screen-2xl bg-white mx-auto'>
       <section className='relative coverimage w-full overflow-hidden'>
         <div
           onClick={() => setImagesModal(true)}

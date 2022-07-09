@@ -10,7 +10,8 @@ import Link from 'next/link'
 import Post from './Post'
 import PrimaryBoxContainer from './ui/PrimaryBoxContainer'
 import { useRouter } from 'next/router'
-const UserF420Profile = () => {
+import { getSession } from 'next-auth/react'
+const UserF420Profile = ({ postLiked, postSaved }) => {
   const router = useRouter()
   const { setUserF420, userF420 } = useUser()
   const [friends, setFriends] = React.useState([])
@@ -43,7 +44,7 @@ const UserF420Profile = () => {
     try {
       const resp = await fetch(`/api/posts?id=${userF420._id}&limit=3`)
       const data = await resp.json()
-      console.log('data', data)
+
       const posts = data.posts
       setPosts(posts)
     } catch (error) {

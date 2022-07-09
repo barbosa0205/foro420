@@ -2,7 +2,9 @@ import React from 'react'
 
 const Container = ({ children }) => {
   return (
-    <section className='container w-full min-h-fit py-4'>{children}</section>
+    <section className='container w-full min-h-screen px-2 bg-white'>
+      {children}
+    </section>
   )
 }
 

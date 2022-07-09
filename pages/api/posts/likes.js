@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   switch (method) {
     case 'PUT':
       try {
-        console.log('uid', query.uid)
         const user = await UserSchema.findOne({
           _id: query.uid,
         })
@@ -40,7 +39,7 @@ export default async function handler(req, res) {
           })
         } else {
           const newPostsLiked = postsLiked.filter((id) => id === query.id)
-          console.log('newPostsLiked', newPostsLiked)
+
           await UserSchema.findOneAndUpdate(
             {
               _id: query.uid,
@@ -49,7 +48,7 @@ export default async function handler(req, res) {
               postsLiked: newPostsLiked,
             }
           )
-          console.log(query.likes)
+
           await PostSchema.findOneAndUpdate(
             {
               _id: query.id,
@@ -60,7 +59,7 @@ export default async function handler(req, res) {
               },
             }
           )
-          console.log('newLikes', Number(query.likes) - 1)
+
           res.status(200).json({
             success: true,
             isLiked: false,
