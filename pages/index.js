@@ -112,7 +112,6 @@ function Home({ postsToShow, questionsPosts }) {
 export default Home
 export const getServerSideProps = async (context) => {
   try {
-    await dbConnect()
     const { req, res } = context
 
     let postsToShow = await PostSchema.find({
