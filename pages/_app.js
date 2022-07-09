@@ -1,9 +1,9 @@
 import App from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-import UserProvider from '../contexts/UserProvider'
-import Layout from '../components/Layout'
+import UserProvider from 'contexts/UserProvider'
+import Layout from 'components/Layout'
 import 'tailwindcss/tailwind.css'
-import '../styles/globals.css'
+import 'styles/globals.css'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
