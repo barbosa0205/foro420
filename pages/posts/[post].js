@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { dbConnect } from 'utils/mongoose'
+import React, { useState } from 'react'
 import PostSchema from 'models/Post'
 import UserSchema from 'models/F420User'
 import TypeSchema from 'models/Type'
@@ -11,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Comment from 'components/Comment'
 import CreateComment from 'components/CreateComment'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Icon from 'components/Icons/Icon'
 import { MenuPopup } from 'components/MenuPopup'
@@ -235,8 +234,6 @@ export default React.memo(PostPage)
 
 export const getServerSideProps = async (context) => {
   try {
-    await dbConnect()
-
     const urlId = context.query.post
     console.log('urlId', urlId)
 
