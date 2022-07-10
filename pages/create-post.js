@@ -25,7 +25,7 @@ import { createPostErrors } from 'helpers/createPostErrors'
 import ButtonPrimary from 'components/ButtonPrimary'
 import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
-import { dbConnect } from 'utils/mongoose'
+
 import { privateRoutes } from 'helpers/privateRoutes'
 const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
@@ -267,7 +267,6 @@ const CreatePost = ({ categories, types }) => {
 }
 export const getServerSideProps = async (ctx) => {
   try {
-    await dbConnect()
     //get all categories
 
     let categories = await CategorySchema.find({})
