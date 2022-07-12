@@ -7,17 +7,12 @@ import PostSchema from 'models/Post'
 import TypeSchema from 'models/Type'
 import CategorySchema from 'models/Category'
 import UserSchema from 'models/F420User'
-import useUser from 'contexts/useUser'
-import { useRouter } from 'next/router'
 import CreatePostButton from 'components/CreatePostButton'
 import AlienBagEmpty from 'assets/SVG/alien-bag-empty.svg'
 
 //posts hardcoded for now
 
 function Home({ postsToShow, questionsPosts }) {
-  const router = useRouter()
-  const { user, setUserData, setUserF420 } = useUser()
-
   //useSelect hook
   const [postAnswerToggle, setPostAnswerToggle] = useState('APORTES')
 
@@ -111,8 +106,6 @@ function Home({ postsToShow, questionsPosts }) {
 export default Home
 export const getServerSideProps = async (context) => {
   try {
-    const { req, res } = context
-
     let postsToShow = await PostSchema.find({
       type: {
         $eq: '6299b5c4086e49fa5c27f860',
