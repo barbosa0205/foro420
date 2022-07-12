@@ -9,6 +9,7 @@ import CategorySchema from 'models/Category'
 import UserSchema from 'models/F420User'
 import CreatePostButton from 'components/CreatePostButton'
 import AlienBagEmpty from 'assets/SVG/alien-bag-empty.svg'
+import { dbConnect } from 'utils/mongoose'
 
 //posts hardcoded for now
 
@@ -106,6 +107,7 @@ function Home({ postsToShow, questionsPosts }) {
 export default Home
 export const getServerSideProps = async (context) => {
   try {
+    await dbConnect()
     let postsToShow = await PostSchema.find({
       type: {
         $eq: '6299b5c4086e49fa5c27f860',
