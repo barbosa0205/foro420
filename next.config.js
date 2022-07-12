@@ -22,7 +22,7 @@ const nextConfig = {
       },
     ]
   },
-  swcMinify: true,
+  swcMinify: false,
   images: {
     domains: [
       'source.unsplash.com',
