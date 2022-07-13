@@ -36,7 +36,7 @@ const UserProvider = ({ children }) => {
     if (status === 'unauthenticated') {
       setUserF420({})
       setUserSignInfo({})
-      router.replace('/login', {})
+      router.push('/login', {})
     }
   }
 
