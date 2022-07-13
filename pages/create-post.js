@@ -65,7 +65,10 @@ const CreatePost = ({ categories, types }) => {
   const { userF420, setUserF420, notify, setNotify } = useUser()
 
   useEffect(() => {
-    if (status === 'authenticated' && !userF420._id) {
+    if (
+      status === 'unauthenticated' ||
+      (status === 'authenticated' && !userF420._id)
+    ) {
       router.replace('/login')
     }
   }, [])

@@ -1,3 +1,4 @@
+import { privateRoutes } from 'helpers/privateRoutes'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
@@ -14,6 +15,7 @@ const UserProvider = ({ children }) => {
   const setUserData = (userData) => setUserSignInfo(userData)
 
   const getUserSession = async () => {
+    console.log('router.asPath', router.asPath)
     if (status === 'loading') return
     if (status === 'authenticated') {
       setUserData(session.user)
@@ -33,10 +35,10 @@ const UserProvider = ({ children }) => {
       }
       setUserF420(data)
     }
-    if (status === 'unauthenticated') {
+    if (status === 'unauthenticated' && privateRoutes.includes(router.asPath)) {
       setUserF420({})
       setUserSignInfo({})
-      router.push('/login', {})
+      router.replace('/login')
     }
   }
 
