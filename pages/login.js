@@ -33,12 +33,12 @@ const Login = () => {
           <LeafImage className='max-w-4xl' />
         </section>
         <section className='w-full max-w-screen-md flex items-center justify-center mt-10 mx-auto'>
-          <ButtonPrimary
+          {/* <ButtonPrimary
             text='Facebook'
             color='text-gray-50 sm:text-4xl py-5'
             bgColor='bg-blue-600'
             onClick={() => signIn('facebook')}
-          />
+          /> */}
           <ButtonPrimary
             text='Google'
             color='text-gray-50 sm:text-4xl py-5 md:text-5xl'
