@@ -5,6 +5,7 @@ import { getSession } from 'next-auth/react'
 import NoPostsSAvedImage from 'assets/SVG/no_posts_saved.svg'
 import Post from 'components/Post'
 import Container from 'components/Container'
+import { dbConnect } from 'utils/mongoose'
 const PostsSaved = ({ posts }) => {
   return (
     <main className='w-full flex flex-col items-center  min-h-screen pt-10'>
@@ -35,6 +36,7 @@ export default PostsSaved
 
 export const getServerSideProps = async (context) => {
   try {
+    await dbConnect()
     let posts = []
 
     const session = await getSession(context)

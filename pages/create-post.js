@@ -27,6 +27,7 @@ import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
 
 import { privateRoutes } from 'helpers/privateRoutes'
+import { dbConnect } from 'utils/mongoose'
 const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
   const router = useRouter()
@@ -267,6 +268,7 @@ const CreatePost = ({ categories, types }) => {
 }
 export const getServerSideProps = async (ctx) => {
   try {
+    await dbConnect()
     //get all categories
 
     let categories = await CategorySchema.find({})
