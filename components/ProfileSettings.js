@@ -6,6 +6,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import userImageDefault from 'assets/default_user.jpg'
 import { useDropzone } from 'react-dropzone'
 import { Input } from './Input'
+import ButtonPrimary from './ButtonPrimary'
 
 const ProfileSettings = () => {
   const { userF420 } = useUser()
@@ -17,7 +18,7 @@ const ProfileSettings = () => {
     profileErrors
   )
 
-  const [imageDropped, setImageDropped] = useState('')
+  const [imageDropped, setImageDropped] = useState(userF420?.image)
 
   const onDrop = useCallback((acceptedFiles) => {
     let imageUrl
@@ -43,13 +44,15 @@ const ProfileSettings = () => {
   useEffect(() => {
     if (userF420.id) {
       setImageDropped(userF420.image)
+      profileValues.fullname = userF420.fullname
+      profileValues.email = userF420.email
     }
   }, [userF420])
 
   return (
     <>
       {userF420 && (
-        <section className='w-full p-2 bg- shadow-md'>
+        <section className='flex flex-col items-center w-full p-2 bg- shadow-md'>
           <div className='w-full flex justify-center items-center flex-wrap mt-2'>
             <div
               className='flex flex-col items-center justify-center cursor-pointer'
@@ -84,6 +87,12 @@ const ProfileSettings = () => {
               />
             </section>
           </div>
+          <ButtonPrimary
+            text={'Aplicar cambios'}
+            color='text-gray-50'
+            bgColor='bg-emerald-600'
+            otherStyle={'mb-3 mt-7'}
+          />
         </section>
       )}
     </>

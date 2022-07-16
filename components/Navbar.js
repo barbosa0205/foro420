@@ -180,25 +180,14 @@ const Navbar = () => {
           {/* <Search /> */}
         </div>
         <div className='w-fit h-full flex items-center'>
-          <section
+          <h3
+            className='hidden md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
             onClick={() => {
-              setShowSide(true)
+              router.push('/login')
             }}
-            className='relative w-fit  md:flex flex-col items-center justify-center mt-5 mr-10 border-gray-300 hidden cursor-pointer'
           >
-            <Image
-              src={userF420?.image || user?.image || userImageDefault}
-              alt='profile'
-              width={50}
-              height={50}
-              size='cover'
-              className='rounded-full'
-            />
-            <i className='ri-arrow-drop-down-line absolute -right-4 bottom-12 text-5xl text-gray-50'></i>
-            <h3 className='font-semibold text-gray-50 p-0'>
-              {userF420 && userF420?.username}
-            </h3>
-          </section>
+            Iniciar sesión
+          </h3>
           <Notify styles={'mr-5'} />
         </div>
       </nav>

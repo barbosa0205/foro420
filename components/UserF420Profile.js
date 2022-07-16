@@ -1,16 +1,15 @@
 import useUser from 'contexts/useUser'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-import Icon from 'components/Icons/Icon'
-import F420User from 'models/F420User'
+
+
 import coverImageProfile from 'assets/default_userprofile_cover.jpg'
-import LinkItem from './LinkItem'
-import IconSquare from './Icons/IconSquare'
+
 import Link from 'next/link'
 import Post from './Post'
 import PrimaryBoxContainer from './ui/PrimaryBoxContainer'
 import { useRouter } from 'next/router'
-import { getSession } from 'next-auth/react'
+
 const UserF420Profile = ({ postLiked, postSaved }) => {
   const router = useRouter()
   const { setUserF420, userF420 } = useUser()
