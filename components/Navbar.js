@@ -180,14 +180,32 @@ const Navbar = () => {
           {/* <Search /> */}
         </div>
         <div className='w-fit h-full flex items-center'>
-          <h3
-            className='hidden md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
-            onClick={() => {
-              router.push('/login')
-            }}
-          >
-            Iniciar sesión
-          </h3>
+          {!userF420 ? (
+            <h3
+              className='hidden md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
+              onClick={() => {
+                router.push('/login')
+              }}
+            >
+              Iniciar sesión
+            </h3>
+          ) : (
+            <section
+              className='relative px-3 hidden md:flex'
+              onClick={() => {
+                setShowSide(!showSide)
+              }}
+            >
+              <Image
+                className='rounded-full'
+                src={userF420.image}
+                alt='user'
+                width={55}
+                height={55}
+              />
+              <Icon icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'} />
+            </section>
+          )}
           <Notify styles={'mr-5'} />
         </div>
       </nav>
