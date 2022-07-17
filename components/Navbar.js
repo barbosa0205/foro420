@@ -198,7 +198,7 @@ const Navbar = () => {
             >
               <Image
                 className='rounded-full'
-                src={userF420.image}
+                src={userF420?.image || userImageDefault}
                 alt='user'
                 width={55}
                 height={55}
