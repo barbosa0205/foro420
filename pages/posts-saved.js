@@ -40,23 +40,23 @@ export const getServerSideProps = async (context) => {
     let posts = []
 
     const session = await getSession(context)
-    if (session) {
-      const user = await UserSchema.findOne({
-        email: session.user.email,
+
+    const user = await UserSchema.findOne({
+      email: session?.user?.email,
+    })
+
+    if (user) {
+      const postsSavedId = user.postsSaved
+
+      posts = await PostSchema.find({
+        _id: {
+          $in: postsSavedId,
+        },
       })
 
-      if (user) {
-        const postsSavedId = user.postsSaved
-
-        posts = await PostSchema.find({
-          _id: {
-            $in: postsSavedId,
-          },
-        })
-
-        posts = JSON.parse(JSON.stringify(posts))
-      }
+      posts = JSON.parse(JSON.stringify(posts))
     }
+
     return {
       props: { posts },
     }
