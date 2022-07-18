@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import UserSchema from 'models/F420User'
 import PostSchema from 'models/Post'
+import CategorySchema from 'models/Category'
+import TypeSchema from 'models/Type'
 import { getSession } from 'next-auth/react'
 import NoPostsSAvedImage from 'assets/SVG/no_posts_saved.svg'
 import Post from 'components/Post'
@@ -44,7 +46,8 @@ export default PostsSaved
 export const getServerSideProps = async (context) => {
   try {
     await dbConnect()
-    let posts = []
+
+    let posts
 
     const session = await getSession(context)
 
@@ -60,6 +63,21 @@ export const getServerSideProps = async (context) => {
           $in: postsSavedId,
         },
       })
+
+      console.log('posts yeah', posts)
+
+      posts = await Promise.all(
+        posts.map(async (post) => {
+          const category = await CategorySchema.findById(post.category)
+          const type = await TypeSchema.findById(post.type)
+          const postedBy = await UserSchema.findById(post.postedBy)
+
+          post.category = category
+          post.type = type
+          post.postedBy = postedBy
+          return post
+        })
+      )
 
       posts = JSON.parse(JSON.stringify(posts))
     }
