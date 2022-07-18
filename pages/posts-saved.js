@@ -10,6 +10,10 @@ import { dbConnect } from 'utils/mongoose'
 const PostsSaved = ({ posts }) => {
   const { userF420 } = useUser()
 
+  useEffect(() => {
+    console.log('posts', posts)
+  }, [posts])
+
   return (
     <main className='w-full flex flex-col items-center  min-h-screen pt-10'>
       <Container>
