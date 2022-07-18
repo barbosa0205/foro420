@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import UserSchema from 'models/F420User'
 import PostSchema from 'models/Post'
 import { getSession } from 'next-auth/react'
 import NoPostsSAvedImage from 'assets/SVG/no_posts_saved.svg'
 import Post from 'components/Post'
 import Container from 'components/Container'
+import useUser from 'contexts/useUser'
 import { dbConnect } from 'utils/mongoose'
 const PostsSaved = ({ posts }) => {
+  const { userF420 } = useUser()
+
   return (
     <main className='w-full flex flex-col items-center  min-h-screen pt-10'>
       <Container>
@@ -61,7 +64,6 @@ export const getServerSideProps = async (context) => {
       props: { posts },
     }
   } catch (error) {
-    console.log('error al obtener los posts guardados', error)
     return {
       props: {},
     }

@@ -6,8 +6,11 @@ const DropDownContainer = ({ text, children }) => {
   const [showContent, setShowContent] = useState(false)
 
   return (
-    <div onClick={() => setShowContent(!showContent)}>
-      <div className='w-full flex bg-emerald-600 items-center justify-between p-2 sm:shadow-sm sm:rounded-lg cursor-pointer z-10'>
+    <div>
+      <div
+        onClick={() => setShowContent(!showContent)}
+        className='w-full flex bg-emerald-600 items-center justify-between p-2 sm:shadow-sm sm:rounded-lg cursor-pointer z-10'
+      >
         <p className='text-white font-semibold text-4xl pl-5'>{text}</p>
         <Icon
           icon={
