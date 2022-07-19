@@ -10,8 +10,6 @@ import Container from 'components/Container'
 import useUser from 'contexts/useUser'
 import { dbConnect } from 'utils/mongoose'
 const PostsSaved = ({ posts }) => {
-  const { userF420 } = useUser()
-
   useEffect(() => {
     console.log('posts', posts)
   }, [posts])
@@ -63,8 +61,6 @@ export const getServerSideProps = async (context) => {
           $in: postsSavedId,
         },
       })
-
-      console.log('posts yeah', posts)
 
       posts = await Promise.all(
         posts.map(async (post) => {
