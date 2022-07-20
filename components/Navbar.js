@@ -118,10 +118,10 @@ const Navbar = () => {
                       <LinkItem
                         icon='ri-bookmark-line'
                         text='Guardados'
-                        to='/posts-saved'
+                        to='/posts/posts-saved'
                         onClick={() => {
                           setShowSide(false)
-                          router.push('/posts-saved')
+                          router.push('/posts/posts-saved')
                         }}
                       />
                       <LinkItem
