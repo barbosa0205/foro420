@@ -24,7 +24,7 @@ export const SubCategories = ({
   return (
     <>
       {subCategories && (
-        <>
+        <div className='pl-3'>
           <p className='text-emerald-600 font-semibold'>subcategorias</p>
           <select
             className='cursor-pointer'
@@ -41,7 +41,7 @@ export const SubCategories = ({
               )
             })}
           </select>
-        </>
+        </div>
       )}
     </>
   )
