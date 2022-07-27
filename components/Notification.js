@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { motion } from 'framer-motion'
-const Notification = ({ text }) => {
+const Notification = ({ type, text }) => {
   return (
     <motion.div
       initial={{
@@ -17,7 +17,11 @@ const Notification = ({ text }) => {
       }}
       className='w-fit fixed top-0 left-0 right-0 mx-auto flex items-center justify-center mt-5'
     >
-      <h2 className='px-5 py-2 bg-white text-emerald-600 rounded-lg shadow-sm font-semibold text-4xl'>
+      <h2
+        className={`px-5 py-2 bg-white ${
+          type === 'error' ? 'text-red-600' : 'text-emerald-600'
+        } rounded-lg shadow-sm font-semibold text-4xl`}
+      >
         {text}
       </h2>
     </motion.div>

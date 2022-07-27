@@ -11,6 +11,7 @@ import Notification from './Notification'
 const Post = ({ data }) => {
   const router = useRouter()
   const { userF420, user, notify, setNotify } = useUser()
+  const [error, setError] = React.useState('')
   const [likes, setLikes] = React.useState(data.likes)
   const [postLiked, setPostLiked] = React.useState(false)
   const [postSaved, setPostSaved] = React.useState(false)
@@ -27,7 +28,7 @@ const Post = ({ data }) => {
         setPostSaved(savedPost)
       }
     } catch (error) {
-      console.log('error en Post', error)
+      setE
     }
   }
 
@@ -171,6 +172,7 @@ const Post = ({ data }) => {
       <hr />
 
       {notify && <Notification text={notify} />}
+      {error && <Notification type='error' text={error} />}
     </>
   )
 }
