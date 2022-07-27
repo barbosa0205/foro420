@@ -1,5 +1,4 @@
 import { dbConnect } from 'utils/mongoose'
-import UserSchema from 'models/F420User'
 import PostSchema from 'models/Post'
 import CategorySchema from 'models/Category'
 export default async function handler(req, res) {
