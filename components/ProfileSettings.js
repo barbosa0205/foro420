@@ -12,8 +12,9 @@ const ProfileSettings = () => {
   const { userF420 } = useUser()
   const [profileValues, handleChange, validateErrorSubmit, errors] = UseForm(
     {
-      fullname: userF420?.fullname,
-      email: userF420?.email,
+      fullname: userF420?.fullname || '',
+      email: userF420?.email || '',
+      username: userF420?.username || '',
     },
     profileErrors
   )
@@ -41,11 +42,41 @@ const ProfileSettings = () => {
     onDrop,
   })
 
+  const applyProfileChanges = async () => {
+    if (
+      (imageDropped === userF420.image &&
+        profileValues.fullname === userF420.fullname &&
+        profileValues.email === userF420.email &&
+        profileValues.username === userF420.username) ||
+      (!imageDropped &&
+        !profileValues.fullname &&
+        !profileValues.email &&
+        !profileValues.username)
+    ) {
+      return
+    }
+
+    const resp = await fetch(
+      `api/profile/profile-settings?uid=${userF420._id}`,
+      {
+        method: 'PUT',
+        'content-Type': 'application/json',
+        body: JSON.stringify({
+          image: imageDropped,
+          fullname: profileValues.fullname,
+          email: profileValues.email,
+          username: profileValues.username,
+        }),
+      }
+    )
+  }
+
   useEffect(() => {
     if (userF420.id) {
       setImageDropped(userF420.image)
       profileValues.fullname = userF420.fullname
       profileValues.email = userF420.email
+      profileValues.username = userF420.username
     }
   }, [userF420])
 
@@ -73,6 +104,13 @@ const ProfileSettings = () => {
             <section className='w-flex flex-col'>
               <Input
                 type={'text'}
+                name='username'
+                value={profileValues.username}
+                onChange={handleChange}
+                placeholder='Tu usuario'
+              />
+              <Input
+                type={'text'}
                 name='fullname'
                 value={profileValues.fullname}
                 onChange={handleChange}
@@ -92,6 +130,7 @@ const ProfileSettings = () => {
             color='text-gray-50'
             bgColor='bg-emerald-600'
             otherStyle={'mb-3 mt-7'}
+            onClick={applyProfileChanges}
           />
         </section>
       )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 
-import { getSession, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { Editor } from '@tinymce/tinymce-react'
 
@@ -10,7 +10,7 @@ import ListItem from 'components/ListItem'
 import { useSelect } from 'hooks/useSelect'
 import TypeSchema from 'models/Type'
 import CategorySchema from 'models/Category'
-import UserSchema from 'models/F420User'
+
 import Image from 'next/image'
 import coverImage2 from 'assets/default-cover-posts/cover2.avif'
 import coverImage3 from 'assets/default-cover-posts/cover3.avif'
@@ -20,14 +20,13 @@ import coverImage6 from 'assets/default-cover-posts/cover6.avif'
 import coverImage7 from 'assets/default-cover-posts/cover7.avif'
 import coverImage8 from 'assets/default-cover-posts/cover8.avif'
 import useUser from 'contexts/useUser'
-import { filterOptions } from 'helpers/options'
+
 import { createPostErrors } from 'helpers/createPostErrors'
 import ButtonPrimary from 'components/ButtonPrimary'
 import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
-
-import { privateRoutes } from 'helpers/privateRoutes'
 import { dbConnect } from 'utils/mongoose'
+
 const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
   const router = useRouter()
@@ -168,9 +167,10 @@ const CreatePost = ({ categories, types }) => {
         <textarea
           type={'text'}
           placeholder='TU TITULO AQUI 👽'
-          className='w-full bg-transparent text-5xl outline-none mb-3 pl-5 resize-none'
+          className='w-11/12 mx-auto text-5xl outline-none mb-3 pl-5 resize-none'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          autoFocus
         />
         {errors.length > 0 &&
           errors.map((error, index) => (
@@ -192,6 +192,9 @@ const CreatePost = ({ categories, types }) => {
           init={{
             resize: true,
             resize_img_proportional: false,
+            mobile: {
+              resize: true,
+            },
             height: '60rem',
             width: '100%',
             selector: '#editor',
@@ -227,7 +230,7 @@ const CreatePost = ({ categories, types }) => {
           <p className='text-green-600 text-4xl md:text-5xl'>Categorias: </p>
           <Listbox
             handleChange={categoryChange}
-            otherStyles='bg-white mx-2 text-3xl md:text-4xl'
+            otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
           >
             {categories &&
               categories.map((category) => (
@@ -239,7 +242,7 @@ const CreatePost = ({ categories, types }) => {
             <>
               <Listbox
                 handleChange={subChange}
-                otherStyles='bg-white mx-2 text-3xl md:text-4xl'
+                otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
               >
                 {subcategories.map((sub, index) => (
                   <ListItem key={index} text={sub.name} />
@@ -252,7 +255,7 @@ const CreatePost = ({ categories, types }) => {
           <p className='text-green-600 text-4xl md:text-5xl'>Tipo: </p>
           <Listbox
             handleChange={typeChange}
-            otherStyles='bg-white mx-2 text-3xl md:text-4xl '
+            otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
           >
             {types &&
               types.map((type) => <ListItem key={type._id} text={type.name} />)}
@@ -263,7 +266,7 @@ const CreatePost = ({ categories, types }) => {
         text={'PUBLICAR POST'}
         bgColor='bg-green-600'
         color='text-gray-50'
-        otherStyle={'mt-10'}
+        otherStyle={'my-10'}
         onClick={uploadPost}
       />
     </main>

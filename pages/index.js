@@ -118,6 +118,8 @@ export const getServerSideProps = async (context) => {
       })
       .limit(30)
 
+    //TODO: Refact with populate!!!!
+
     //get category, type and postedBy for each post
     postsToShow = await Promise.all(
       postsToShow.map(async (post) => {

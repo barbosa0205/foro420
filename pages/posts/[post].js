@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PostSchema from 'models/Post'
 import UserSchema from 'models/F420User'
 import TypeSchema from 'models/Type'
@@ -20,7 +20,7 @@ import { EditMode } from 'components/EditMode'
 import Notification from 'components/Notification'
 import like from 'helpers/likePost'
 import savePost from 'helpers/savePost'
-const PostPage = ({ post, postLiked: likedPost }) => {
+const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   const router = useRouter()
   const { user, userF420, setUserF420, notify, setNotify } = useUser()
   const [comments, setComments] = useState([])
@@ -29,6 +29,7 @@ const PostPage = ({ post, postLiked: likedPost }) => {
   const [editPostState, setEditPostState] = React.useState(false)
   const [likes, setLikes] = React.useState(post.likes)
   const [postLiked, setPostLiked] = React.useState(likedPost)
+  const [postSaved, setPostSaved] = React.useState(savedPost)
 
   const [editData, setEditData] = React.useState({
     image: post.image,
@@ -49,6 +50,18 @@ const PostPage = ({ post, postLiked: likedPost }) => {
       router.replace('/')
     }
   }
+
+  useEffect(() => {
+    setComments(post.comments)
+  }, [])
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => {
+        setNotify('')
+      }, 2500)
+    }
+  }, [notify])
 
   return (
     <>
@@ -151,14 +164,16 @@ const PostPage = ({ post, postLiked: likedPost }) => {
                 } else {
                   if (dta.success) {
                     if (dta.postUnsaved) {
+                      setPostSaved(false)
                       setNotify('Post removido de tus guardados correctamente')
                     } else {
+                      setPostSaved(true)
                       setNotify('Post guardado correctamente')
                     }
                   }
                 }
               }}
-              icon='ri-bookmark-line'
+              icon={`${postSaved ? 'ri-bookmark-fill' : 'ri-bookmark-line'}`}
               color='text-gray-600 text-3xl cursor-pointer'
             />
           </section>
@@ -257,7 +272,7 @@ export const getServerSideProps = async (context) => {
     )
 
     let postLiked = null
-
+    let postSaved = null
     const session = await getSession(context)
 
     if (session) {
@@ -271,6 +286,12 @@ export const getServerSideProps = async (context) => {
         }
 
         postLiked = JSON.parse(JSON.stringify(postLiked))
+
+        if (user.postsSaved) {
+          postSaved = user.postsSaved.includes(post._id)
+        }
+
+        postSaved = JSON.parse(JSON.stringify(postSaved))
       }
     }
     const commentsPromise = post.comments.map(async (comment) => {
@@ -293,18 +314,15 @@ export const getServerSideProps = async (context) => {
 
     const comments = await Promise.all(commentsPromise)
 
-    const commentsFilter = comments.filter((comment) => comment)
-
-    console.log(commentsFilter)
-
     post.postedBy = postedBy
     post.category = category
     post.type = type
-    post.comments = JSON.parse(JSON.stringify(commentsFilter))
+    post.comments = JSON.parse(JSON.stringify(comments))
     return {
       props: {
         post,
         postLiked,
+        postSaved,
       },
     }
   } catch (error) {

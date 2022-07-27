@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         const postDeleted = await PostSchema.deleteOne({
           _id: query.id,
         })
-
+        console.log('postDeleted', postDeleted)
         res.status(200).send({
           succes: true,
           message: 'Post eliminado correctamente',
@@ -49,6 +49,7 @@ export default async function handler(req, res) {
             ...body.data,
           }
         )
+        console.log('postToEdit', postToEdit)
         res.status(200).json({
           success: true,
         })

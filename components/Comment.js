@@ -126,7 +126,7 @@ const Comment = ({
                 className='rounded-full mx-auto'
               />
               <div className='relative w-fit bg-stone-200 ml-2 py-2 px-4 rounded-3xl'>
-                <h2 className='ml-2 text-2xl font-semibold'>{username}</h2>
+                <h2 className='text-2xl font-semibold m-0 p-0'>{username}</h2>
                 {!editComment ? (
                   <p>{commentContent}</p>
                 ) : (

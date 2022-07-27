@@ -13,19 +13,10 @@ const handler = async (req, res) => {
               const question = await PostSchema.find({
                 postedBy: query.id,
                 type: '6299b5e9086e49fa5c27f861',
-              }).limit(query.limit)
-
-              const questionData = question.map(async (question) => {
-                const postedBy = await UserSchema.findById(question.postedBy)
-                const category = await CategorySchema.findById(
-                  question.category
-                )
-                question.postedBy = postedBy
-                question.category = category
-                return question
               })
-              console.log('question', question)
-              await Promise.all(questionData)
+                .populate('category')
+                .populate('postedBy')
+                .limit(query.limit)
 
               res.status(200).json({
                 question,
