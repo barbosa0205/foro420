@@ -172,7 +172,22 @@ const Navbar = () => {
           <Link href='/'>
             {/* TODO:Replace with logo-movil and logo-desk */}
             <a className='text-gray-100 pl-4 font-mono font-thin text-4xl sm:text-5xl cursor-pointer'>
-              {width < 400 ? 'F420' : 'Foro 420'}
+              {width < 400 ? (
+                <h2
+                  onClick={() => router.push('/')}
+                  className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
+                >
+                  F<span className='mx-1'>420</span>
+                </h2>
+              ) : (
+                <h2
+                  onClick={() => router.push('/')}
+                  className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
+                >
+                  FORO
+                  <span className='mx-4'>420</span>
+                </h2>
+              )}
             </a>
           </Link>
         </div>
