@@ -180,7 +180,7 @@ const Navbar = () => {
           {/* <Search /> */}
         </div>
         <div className='w-fit h-full flex items-center'>
-          {!userF420._id ? (
+          {!userF420?._id ? (
             <h3
               className='hidden md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
               onClick={() => {

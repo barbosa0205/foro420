@@ -1,5 +1,5 @@
 import { privateRoutes } from 'helpers/privateRoutes'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 
@@ -13,6 +13,46 @@ const UserProvider = ({ children }) => {
   const [notify, setNotify] = React.useState('')
   const [notifies, setNotifies] = React.useState([])
   const setUserData = (userData) => setUserSignInfo(userData)
+
+  const checkIfTheSessionExpired = async () => {
+    try {
+      if (status === 'loading') return
+      if (
+        status === 'unauthenticated' &&
+        privateRoutes.includes(router.asPath)
+      ) {
+        setUserF420({})
+        setUserSignInfo({})
+        router.replace('/login')
+      }
+      if (status === 'authenticated') {
+        const resp = await fetch(`/api/session?email=${session.user.email}`, {
+          'content-type': 'application/json',
+        })
+        const data = await resp.json()
+        if (data.success) {
+          console.log(
+            'localstorage info',
+            localStorage.getItem('foro420-session-expires_at')
+          )
+
+          if (localStorage.getItem('foro420-session-expires_at')) {
+            if (
+              localStorage.getItem('foro420-session-expires_at') <
+              String(new Date())
+            ) {
+              localStorage.removeItem('foro420-session-expires_at')
+              signOut()
+            }
+          } else {
+            localStorage.setItem('foro420-session-expires_at', data.expires_at)
+          }
+        }
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const getUserSession = async () => {
     console.log('router.asPath', router.asPath)
@@ -33,6 +73,7 @@ const UserProvider = ({ children }) => {
       if (!data?._id && router.asPath !== '/login') {
         router.replace('/welcome')
       }
+
       setUserF420(data)
     }
     if (status === 'unauthenticated' && privateRoutes.includes(router.asPath)) {
@@ -43,7 +84,14 @@ const UserProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    checkIfTheSessionExpired()
     getUserSession()
+      .then(() => {
+        console.log('all done')
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+      })
   }, [status])
 
   useEffect(() => {
