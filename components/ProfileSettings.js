@@ -28,8 +28,11 @@ const ProfileSettings = () => {
         preview: URL.createObjectURL(file),
       })
     })
-    console.log(imageUrl)
-    setImageDropped(imageUrl.preview)
+    const reader = new FileReader()
+    reader.readAsDataURL(imageUrl)
+    reader.onloadend = () => {
+      setImageDropped(reader.result)
+    }
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -72,6 +75,10 @@ const ProfileSettings = () => {
   }
 
   useEffect(() => {
+    console.log(imageDropped)
+  }, [imageDropped])
+
+  useEffect(() => {
     if (userF420.id) {
       setImageDropped(userF420.image)
       profileValues.fullname = userF420.fullname
@@ -92,9 +99,10 @@ const ProfileSettings = () => {
               <Image
                 className='relative rounded-md'
                 src={imageDropped || userImageDefault}
-                alt='usuario'
+                alt='profile preview'
                 width={80}
                 height={80}
+                objectFit={'cover'}
               />
               <p className='text-2xl font-bold text-emerald-600'>
                 Cambiar imagen

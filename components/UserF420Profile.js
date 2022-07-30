@@ -2,7 +2,6 @@ import useUser from 'contexts/useUser'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 
-
 import coverImageProfile from 'assets/default_userprofile_cover.jpg'
 
 import Link from 'next/link'
@@ -106,6 +105,7 @@ const UserF420Profile = ({ postLiked, postSaved }) => {
                 width={128}
                 height={128}
                 priority={true}
+                objectFit={'cover'}
               />
             </div>
           </div>

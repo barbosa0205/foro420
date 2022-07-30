@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const path = require('path')
 const nextConfig = {
+  experimental: {
+    images: {
+      unoptimize: true,
+    },
+  },
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb',
+    },
+  },
   async headers() {
     return [
       {

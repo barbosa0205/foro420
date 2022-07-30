@@ -70,6 +70,7 @@ const Navbar = () => {
                     width={100}
                     height={100}
                     className='rounded-full'
+                    objectFit={'cover'}
                   />
                   <h3 className='font-semibold'>
                     {userF420 && userF420?.username}
@@ -217,6 +218,7 @@ const Navbar = () => {
                 alt='user'
                 width={55}
                 height={55}
+                objectFit={'cover'}
               />
               <Icon icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'} />
             </section>
