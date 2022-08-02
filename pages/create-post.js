@@ -193,7 +193,7 @@ const CreatePost = ({ categories, types }) => {
             resize: true,
             resize_img_proportional: false,
             mobile: {
-              resize: true,
+              menubar: true,
             },
             height: '60rem',
             width: '100%',
