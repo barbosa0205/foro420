@@ -147,6 +147,10 @@ td {
 .coverImage {
   min-height: 20rem;
 }
+.profileImageSize {
+  max-width: 10rem;
+  max-height: 10rem;
+}
 
 @media (min-width: 630px) {
   .coverImage {

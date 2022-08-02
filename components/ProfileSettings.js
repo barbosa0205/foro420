@@ -7,9 +7,10 @@ import userImageDefault from 'assets/default_user.jpg'
 import { useDropzone } from 'react-dropzone'
 import { Input } from './Input'
 import ButtonPrimary from './ButtonPrimary'
+import Notification from './Notification'
 
 const ProfileSettings = () => {
-  const { userF420 } = useUser()
+  const { userF420, setUserF420, notify, setNotify } = useUser()
   const [profileValues, handleChange, validateErrorSubmit, errors] = UseForm(
     {
       fullname: userF420?.fullname || '',
@@ -46,32 +47,53 @@ const ProfileSettings = () => {
   })
 
   const applyProfileChanges = async () => {
-    if (
-      (imageDropped === userF420.image &&
-        profileValues.fullname === userF420.fullname &&
-        profileValues.email === userF420.email &&
-        profileValues.username === userF420.username) ||
-      (!imageDropped &&
-        !profileValues.fullname &&
-        !profileValues.email &&
-        !profileValues.username)
-    ) {
-      return
-    }
-
-    const resp = await fetch(
-      `api/profile/profile-settings?uid=${userF420._id}`,
-      {
-        method: 'PUT',
-        'content-Type': 'application/json',
-        body: JSON.stringify({
-          image: imageDropped,
-          fullname: profileValues.fullname,
-          email: profileValues.email,
-          username: profileValues.username,
-        }),
+    try {
+      if (
+        (imageDropped === userF420.image &&
+          profileValues.fullname === userF420.fullname &&
+          profileValues.email === userF420.email &&
+          profileValues.username === userF420.username) ||
+        (!imageDropped &&
+          !profileValues.fullname &&
+          !profileValues.email &&
+          !profileValues.username)
+      ) {
+        return
       }
-    )
+
+      const resp = await fetch(
+        `api/profile/profile-settings?uid=${userF420._id}`,
+        {
+          method: 'PUT',
+          'content-Type': 'application/json',
+          body: JSON.stringify({
+            image: imageDropped,
+            fullname: profileValues.fullname,
+            email: profileValues.email,
+            username: profileValues.username,
+          }),
+        }
+      )
+
+      if (resp.status === 413) {
+        setNotify('La imagen no debe ser mayor a 1mb')
+        return
+      }
+
+      const data = await resp.json()
+      if (data.success) {
+        setUserF420({
+          ...userF420,
+          image: data.data.image,
+          fullname: data.data.fullname,
+          email: data.data.email,
+          username: data.data.username,
+        })
+        setNotify(data.message)
+      }
+    } catch (error) {
+      setNotify('Algo salio mal')
+    }
   }
 
   useEffect(() => {
@@ -86,6 +108,14 @@ const ProfileSettings = () => {
       profileValues.username = userF420.username
     }
   }, [userF420])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (notify) {
+        setNotify('')
+      }
+    }, 2000)
+  }, [notify])
 
   return (
     <>
@@ -142,6 +172,7 @@ const ProfileSettings = () => {
           />
         </section>
       )}
+      {notify && <Notification text={notify} />}
     </>
   )
 }

@@ -6,11 +6,7 @@ const nextConfig = {
       unoptimize: true,
     },
   },
-  api: {
-    bodyParser: {
-      sizeLimit: '4mb',
-    },
-  },
+
   async headers() {
     return [
       {

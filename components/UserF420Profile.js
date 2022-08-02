@@ -99,11 +99,11 @@ const UserF420Profile = ({ postLiked, postSaved }) => {
             />
             <div className='absolute -bottom-16 p-2 rounded-full bg-gray-100'>
               <Image
-                className='rounded-full'
+                className='profileImageSize rounded-full'
                 src={userF420.image}
                 alt='profile'
-                width={128}
-                height={128}
+                width={150}
+                height={150}
                 priority={true}
                 objectFit={'cover'}
               />

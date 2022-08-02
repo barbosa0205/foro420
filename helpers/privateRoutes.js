@@ -1,1 +1,1 @@
-export const privateRoutes = ['/create-post', '/posts/edit']
+export const privateRoutes = ['/create-post', '/posts/edit', '/settings']
