@@ -314,10 +314,17 @@ export const getServerSideProps = async (context) => {
 
     const comments = await Promise.all(commentsPromise)
 
+    //limpiar respuestas como null
+
+    const cleanComments = comments.filter((comment) => comment)
+
     post.postedBy = postedBy
     post.category = category
     post.type = type
-    post.comments = JSON.parse(JSON.stringify(comments))
+    post.comments = JSON.parse(JSON.stringify(cleanComments))
+
+    console.log('post', post)
+
     return {
       props: {
         post,

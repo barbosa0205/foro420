@@ -85,10 +85,11 @@ const CommentResp = ({
           width={50}
           height={50}
           className='rounded-full mx-auto'
+          objectFit={'cover'}
         />
         <div className='relative w-fit bg-stone-200 ml-2 pb-2 px-4 rounded-3xl'>
           <div className='pt-2 border-l-2 border-stone-200'></div>
-          <h2 className='ml-2 text-2xl font-semibold'>{username}</h2>
+          <h2 className='ml-2 p-0 text-2xl font-semibold'>{username}</h2>
           {!editComment ? (
             <p>{commentContent}</p>
           ) : (
