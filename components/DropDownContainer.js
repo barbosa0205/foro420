@@ -6,7 +6,7 @@ const DropDownContainer = ({ text, children }) => {
   const [showContent, setShowContent] = useState(false)
 
   return (
-    <div className=' w-1/2 max-w-screen-sm'>
+    <div className=' w-10/12 max-w-screen-sm'>
       <div
         onClick={() => setShowContent(!showContent)}
         className='w-full flex bg-emerald-600 items-center justify-between p-2 sm:shadow-sm sm:rounded-lg cursor-pointer z-10'

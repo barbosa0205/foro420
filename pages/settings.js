@@ -5,14 +5,16 @@ import React from 'react'
 
 const settings = () => {
   return (
-    <main className='w-full min-h-screen flex flex-col items-center'>
-      <h1 className='w-full text-center text-5xl font-semibold text-emerald-600 mt-2 mb-10'>
-        Configuración
-      </h1>
-      <DropDownContainer text='Perfil'>
-        <ProfileSettings />
-      </DropDownContainer>
-    </main>
+    <>
+      <main className='w-full min-h-screen flex flex-col items-center'>
+        <h1 className='w-full text-center text-5xl font-semibold text-emerald-600 mt-2 mb-10'>
+          Configuración
+        </h1>
+        <DropDownContainer text='Perfil'>
+          <ProfileSettings />
+        </DropDownContainer>
+      </main>
+    </>
   )
 }
 

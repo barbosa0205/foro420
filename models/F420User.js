@@ -47,12 +47,17 @@ const User = new Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    socket: String,
+
     postsLiked: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Post',
       },
     ],
+    cloudinary: {
+      type: String,
+    },
     postsSaved: [
       {
         type: Schema.Types.ObjectId,
@@ -68,6 +73,13 @@ const User = new Schema(
     friends: [
       {
         type: String,
+      },
+    ],
+    notifications: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Notification',
+        default: [],
       },
     ],
   },

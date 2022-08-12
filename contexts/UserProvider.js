@@ -31,11 +31,6 @@ const UserProvider = ({ children }) => {
         })
         const data = await resp.json()
         if (data.success) {
-          console.log(
-            'localstorage info',
-            localStorage.getItem('foro420-session-expires_at')
-          )
-
           if (localStorage.getItem('foro420-session-expires_at')) {
             if (
               localStorage.getItem('foro420-session-expires_at') <
@@ -55,7 +50,6 @@ const UserProvider = ({ children }) => {
   }
 
   const getUserSession = async () => {
-    console.log('router.asPath', router.asPath)
     if (status === 'loading') return
     if (status === 'authenticated') {
       setUserData(session.user)
@@ -86,9 +80,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     checkIfTheSessionExpired()
     getUserSession()
-      .then(() => {
-        console.log('all done')
-      })
+      .then(() => {})
       .catch((error) => {
         console.log('error: ', error)
       })

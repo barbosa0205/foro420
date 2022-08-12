@@ -37,6 +37,7 @@ const nextConfig = {
       'th.bing.com',
       'picsum.photos',
       'images.pexels.com',
+      'res.cloudinary.com',
     ],
   },
   reactStrictMode: true,

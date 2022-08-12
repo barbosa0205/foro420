@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   switch (method) {
     case 'POST':
       try {
-        console.log('body', body)
         let comment = await new CommentSchema({
           postedBy: body.postedBy,
           content: body.content,
@@ -39,7 +38,7 @@ export default async function handler(req, res) {
         }
 
         await comment.save()
-        console.log('comment', comment)
+
         res.status(200).json(comment)
       } catch (error) {
         console.log(error)
@@ -60,7 +59,7 @@ export default async function handler(req, res) {
             content: body.content,
           }
         )
-        console.log(commentEdited)
+
         res.status(200).json({
           success: true,
           message: 'Comentario editado correctamente',
@@ -123,7 +122,7 @@ export default async function handler(req, res) {
               responses: responses,
             }
           )
-          console.log('newResps', responses)
+
           let commentDeleted = await CommentSchema.deleteOne({
             _id: body.id,
           })

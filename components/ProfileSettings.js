@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone'
 import { Input } from './Input'
 import ButtonPrimary from './ButtonPrimary'
 import Notification from './Notification'
+import axios from 'axios'
 
 const ProfileSettings = () => {
   const { userF420, setUserF420, notify, setNotify } = useUser()
@@ -21,7 +22,7 @@ const ProfileSettings = () => {
   )
 
   const [imageDropped, setImageDropped] = useState(userF420?.image)
-
+  const [imageFile, setImageFile] = useState(null)
   const onDrop = useCallback((acceptedFiles) => {
     let imageUrl
     acceptedFiles.map((file) => {
@@ -29,11 +30,8 @@ const ProfileSettings = () => {
         preview: URL.createObjectURL(file),
       })
     })
-    const reader = new FileReader()
-    reader.readAsDataURL(imageUrl)
-    reader.onloadend = () => {
-      setImageDropped(reader.result)
-    }
+    setImageDropped(imageUrl.preview)
+    setImageFile(imageUrl)
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -45,6 +43,72 @@ const ProfileSettings = () => {
     },
     onDrop,
   })
+
+  const uploadImageToCloudinary = async (formData) => {
+    try {
+      const respImageUploaded = axios.post(
+        `https://api.cloudinary.com/v1_1/foro420-media/image/upload?api_key=$828592597243784`,
+        formData
+      )
+      const dataImageUpload = await respImageUploaded
+
+      const imageId = dataImageUpload.data.public_id
+
+      //verify if cloudinary id already exists and delete the image from cloudinary
+      const resp = await fetch(`api/cloudinary?uid=${userF420._id}`, {
+        method: 'GET',
+        'content-type': 'application/json',
+      })
+      const data = await resp.json()
+
+      if (data.cloudinary) {
+        // const formData = new FormData()
+        // formData.append('public_id', data.cloudinary)
+        // formData.append('signature', 'p6nlpprc')
+        // formData.append('api_key', '828592597243784')
+        // formData.append('timestamp', new Date().getTime())
+
+        // const deleteCloudinaryImageResp = axios.post(
+        //   `https://api.cloudinary.com/v1_1/foro420-media/image/destroy`,
+        //   formData
+        // )
+        const resp = await fetch(
+          '/api/cloudinary?cloudinary=' + data.cloudinary,
+          {
+            method: 'DELETE',
+          }
+        )
+        setNewCloudinaryProfile(imageId, userF420._id)
+        return (
+          'https://res.cloudinary.com/foro420-media/image/upload/v1660276446/' +
+          imageId
+        )
+      } else {
+        setNewCloudinaryProfile(imageId, userF420._id)
+        return (
+          'https://res.cloudinary.com/foro420-media/image/upload/v1660276446/' +
+          imageId
+        )
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const setNewCloudinaryProfile = async (imageId, uid) => {
+    try {
+      const resp = await fetch(
+        `api/cloudinary?uid=${uid}&image_id=${imageId}`,
+        {
+          method: 'PUT',
+          'content-Type': 'application/json',
+        }
+      )
+      const data = await resp.json()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const applyProfileChanges = async () => {
     try {
@@ -61,13 +125,22 @@ const ProfileSettings = () => {
         return
       }
 
+      //convert image to formData
+      const formData = new FormData()
+      formData.append('file', imageFile)
+      formData.append('upload_preset', 'p6nlpprc')
+
+      //TODO:
+
+      const cloudinaryImageUrl = await uploadImageToCloudinary(formData)
+
       const resp = await fetch(
         `api/profile/profile-settings?uid=${userF420._id}`,
         {
           method: 'PUT',
           'content-Type': 'application/json',
           body: JSON.stringify({
-            image: imageDropped,
+            image: cloudinaryImageUrl,
             fullname: profileValues.fullname,
             email: profileValues.email,
             username: profileValues.username,
@@ -96,9 +169,7 @@ const ProfileSettings = () => {
     }
   }
 
-  useEffect(() => {
-    console.log(imageDropped)
-  }, [imageDropped])
+  useEffect(() => {}, [imageDropped])
 
   useEffect(() => {
     if (userF420.id) {

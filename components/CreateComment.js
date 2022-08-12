@@ -1,3 +1,4 @@
+import { sendNotification } from 'helpers/notifications'
 import Image from 'next/image'
 import React from 'react'
 
@@ -25,6 +26,13 @@ const CreateComment = ({ user, postId, setComments }) => {
         const data = await resp.json()
         setComments((prev) => [...prev, data])
         setComment('')
+
+        //sending notification
+
+        await sendNotification('comment', {
+          user: user._id,
+          postId,
+        })
       }
     } catch (error) {
       console.log(error)
