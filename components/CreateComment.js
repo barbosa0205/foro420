@@ -49,6 +49,7 @@ const CreateComment = ({ user, postId, setComments }) => {
           width={50}
           height={50}
           className='rounded-full'
+          objectFit={'cover'}
         />
         <textarea
           className='w-full ml-2 outline-none p-1 text-2xl resize-none'

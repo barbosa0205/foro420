@@ -120,6 +120,7 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
               height={60}
               src={post.postedBy.image}
               alt='user'
+              objectFit={'cover'}
             />
             <Link
               href={`/profile/${post.postedBy.username}?id=${post.postedBy._id}`}
