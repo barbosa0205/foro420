@@ -7,7 +7,7 @@ import React, { useEffect } from 'react'
 
 const PushAlerts = () => {
   const { socket } = useSocket()
-  const { userF420 } = useUser()
+  const { userF420, setPendientNotifications } = useUser()
 
   const getSocket = async (socketId) => {
     const socket = await saveSocket(socketId, userF420._id)
@@ -22,6 +22,9 @@ const PushAlerts = () => {
         const pendientNotifies = await getPendientNotifications({
           uid: userF420._id,
         })
+        if (pendientNotifies?.notificationsPendients?.length) {
+          setPendientNotifications(pendientNotifies.notificationsPendients)
+        }
       })
     }
   }, [socket])

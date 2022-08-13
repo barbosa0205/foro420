@@ -12,6 +12,7 @@ const UserProvider = ({ children }) => {
   const [userF420, setUserF420] = React.useState({})
   const [notify, setNotify] = React.useState('')
   const [notifies, setNotifies] = React.useState([])
+  const [pendientNotifications, setPendientNotifications] = React.useState([])
   const setUserData = (userData) => setUserSignInfo(userData)
 
   const checkIfTheSessionExpired = async () => {
@@ -101,6 +102,8 @@ const UserProvider = ({ children }) => {
     setNotifies,
     notify,
     setNotify,
+    pendientNotifications,
+    setPendientNotifications,
   }
 
   return <userContext.Provider value={value}>{children}</userContext.Provider>

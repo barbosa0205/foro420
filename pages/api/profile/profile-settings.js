@@ -9,7 +9,7 @@ const handler = async (req, res) => {
     case 'PUT':
       try {
         const uid = query.uid
-        const { image, username, fullname, email } = JSON.parse(body)
+        const { image, username, fullname } = JSON.parse(body)
 
         await UserSchema.updateMany(
           {
@@ -19,7 +19,7 @@ const handler = async (req, res) => {
             image,
             username,
             fullname,
-            email,
+            // email,
           }
         )
 
@@ -30,7 +30,7 @@ const handler = async (req, res) => {
             image,
             username,
             fullname,
-            email,
+            // email,
           },
         })
       } catch (error) {

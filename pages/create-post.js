@@ -19,6 +19,9 @@ import coverImage5 from 'assets/default-cover-posts/cover5.avif'
 import coverImage6 from 'assets/default-cover-posts/cover6.avif'
 import coverImage7 from 'assets/default-cover-posts/cover7.avif'
 import coverImage8 from 'assets/default-cover-posts/cover8.avif'
+
+import loadingImg from 'assets/loader.gif'
+
 import useUser from 'contexts/useUser'
 
 import { createPostErrors } from 'helpers/createPostErrors'
@@ -26,12 +29,13 @@ import ButtonPrimary from 'components/ButtonPrimary'
 import Icon from 'components/Icons/Icon'
 import ImageModal from 'components/ImageModal'
 import { dbConnect } from 'utils/mongoose'
+import Notification from 'components/Notification'
 
 const CreatePost = ({ categories, types }) => {
   const editorRef = useRef(null)
   const router = useRouter()
   const { data: session, status } = useSession()
-
+  const [loading, setLoading] = useState(false)
   const [coverImage, setCoverImage] = useState(coverImage2)
 
   const [imagesModal, setImagesModal] = useState(false)
@@ -109,6 +113,7 @@ const CreatePost = ({ categories, types }) => {
 
   const uploadPost = async () => {
     try {
+      setLoading(true)
       const postData = {
         title,
         content,
@@ -134,8 +139,11 @@ const CreatePost = ({ categories, types }) => {
       })
       const postDta = await post.json()
       setNotify('Post creado correctamente')
-      console.log('post', postDta._id)
+      router.replace(`/posts/${postDta.newPost._id}`)
+      setLoading(false)
     } catch (error) {
+      setNotify('Algo salio mal: ' + error.message)
+      setLoading(false)
       console.error(error)
     }
   }
@@ -269,6 +277,10 @@ const CreatePost = ({ categories, types }) => {
         otherStyle={'my-10'}
         onClick={uploadPost}
       />
+      {notify && <Notification text={notify} />}
+      {loading && (
+        <Image width={100} height={100} src={loadingImg} alt='loading' />
+      )}
     </main>
   )
 }

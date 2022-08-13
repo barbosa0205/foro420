@@ -9,13 +9,13 @@ import { Input } from './Input'
 import ButtonPrimary from './ButtonPrimary'
 import Notification from './Notification'
 import axios from 'axios'
-
+import loadingImg from 'assets/loader.gif'
 const ProfileSettings = () => {
   const { userF420, setUserF420, notify, setNotify } = useUser()
   const [profileValues, handleChange, validateErrorSubmit, errors] = UseForm(
     {
       fullname: userF420?.fullname || '',
-      email: userF420?.email || '',
+      // email: userF420?.email || '',
       username: userF420?.username || '',
     },
     profileErrors
@@ -23,6 +23,7 @@ const ProfileSettings = () => {
 
   const [imageDropped, setImageDropped] = useState(userF420?.image)
   const [imageFile, setImageFile] = useState(null)
+  const [loading, setLoading] = useState(false)
   const onDrop = useCallback((acceptedFiles) => {
     let imageUrl
     acceptedFiles.map((file) => {
@@ -62,16 +63,6 @@ const ProfileSettings = () => {
       const data = await resp.json()
 
       if (data.cloudinary) {
-        // const formData = new FormData()
-        // formData.append('public_id', data.cloudinary)
-        // formData.append('signature', 'p6nlpprc')
-        // formData.append('api_key', '828592597243784')
-        // formData.append('timestamp', new Date().getTime())
-
-        // const deleteCloudinaryImageResp = axios.post(
-        //   `https://api.cloudinary.com/v1_1/foro420-media/image/destroy`,
-        //   formData
-        // )
         const resp = await fetch(
           '/api/cloudinary?cloudinary=' + data.cloudinary,
           {
@@ -115,15 +106,16 @@ const ProfileSettings = () => {
       if (
         (imageDropped === userF420.image &&
           profileValues.fullname === userF420.fullname &&
-          profileValues.email === userF420.email &&
+          // profileValues.email === userF420.email &&
           profileValues.username === userF420.username) ||
         (!imageDropped &&
           !profileValues.fullname &&
-          !profileValues.email &&
+          // !profileValues.email &&
           !profileValues.username)
       ) {
         return
       }
+      setLoading(true)
 
       //convert image to formData
       const formData = new FormData()
@@ -142,7 +134,7 @@ const ProfileSettings = () => {
           body: JSON.stringify({
             image: cloudinaryImageUrl,
             fullname: profileValues.fullname,
-            email: profileValues.email,
+            // email: profileValues.email,
             username: profileValues.username,
           }),
         }
@@ -157,15 +149,17 @@ const ProfileSettings = () => {
       if (data.success) {
         setUserF420({
           ...userF420,
-          image: data.data.image,
+          image: data.data.image || userF420.image,
           fullname: data.data.fullname,
-          email: data.data.email,
+          // email: data.data.email,
           username: data.data.username,
         })
         setNotify(data.message)
+        setLoading(false)
       }
     } catch (error) {
       setNotify('Algo salio mal')
+      setLoading(false)
     }
   }
 
@@ -175,7 +169,7 @@ const ProfileSettings = () => {
     if (userF420.id) {
       setImageDropped(userF420.image)
       profileValues.fullname = userF420.fullname
-      profileValues.email = userF420.email
+      // profileValues.email = userF420.email
       profileValues.username = userF420.username
     }
   }, [userF420])
@@ -225,13 +219,13 @@ const ProfileSettings = () => {
                 onChange={handleChange}
                 placeholder='Tu nombre'
               />
-              <Input
+              {/* <Input
                 type={'text'}
                 name='email'
                 value={profileValues.email}
                 onChange={handleChange}
                 placeholder='Tu correo'
-              />
+              /> */}
             </section>
           </div>
           <ButtonPrimary
@@ -241,6 +235,9 @@ const ProfileSettings = () => {
             otherStyle={'mb-3 mt-7'}
             onClick={applyProfileChanges}
           />
+          {loading && (
+            <Image width={100} height={100} src={loadingImg} alt='loading' />
+          )}
         </section>
       )}
       {notify && <Notification text={notify} />}

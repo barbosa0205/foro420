@@ -207,7 +207,7 @@ const Navbar = () => {
             </h3>
           ) : (
             <section
-              className='relative px-3 hidden md:flex'
+              className='relative px-3 mx-2 hidden md:flex cursor-pointer'
               onClick={() => {
                 setShowSide(!showSide)
               }}

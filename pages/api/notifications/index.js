@@ -10,8 +10,8 @@ export default async function handler(req, res) {
       try {
         const user = await UserSchema.findOne({
           _id: query.uid,
-        })
-        if (user?.notifications?.length) {
+        }).populate('notifications')
+        if (user?.notifications.length) {
           const notificationsPendients = user.notifications.filter(
             (notify) => notify.pendientToView
           )
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
             notificationsPendients,
           })
         } else {
-          res.status(404).json({
+          res.status(200).json({
             success: false,
             message: 'notifications are not',
           })
@@ -56,7 +56,6 @@ export default async function handler(req, res) {
               },
             }
           )
-          //TODO: save the notification on db as pendient notificarion
         }
       } catch (error) {
         res.status(500).json({

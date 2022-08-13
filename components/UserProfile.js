@@ -140,6 +140,7 @@ const UserProfile = () => {
                 width={128}
                 height={128}
                 priority={true}
+                objectFit={'cover'}
               />
             </div>
           </div>
