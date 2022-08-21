@@ -3,7 +3,7 @@ import { sendNotification } from 'helpers/notifications'
 import Image from 'next/image'
 import React from 'react'
 
-const CreateComment = ({ user, postId, setComments }) => {
+const CreateComment = ({ user, postId, setComments, comments }) => {
   const { socket } = useSocket()
   const [comment, setComment] = React.useState('')
 
@@ -26,7 +26,9 @@ const CreateComment = ({ user, postId, setComments }) => {
       })
       if (resp.status === 200) {
         const data = await resp.json()
-        setComments((prev) => [data, ...prev])
+        const newComments = [data, ...comments]
+
+        setComments([...newComments])
         setComment('')
 
         //sending notification

@@ -190,15 +190,16 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
               <CreateComment
                 user={userF420}
                 postId={post._id}
+                comments={comments}
                 setComments={setComments}
               />
             ) : (
               <p></p>
             )}
             {comments.length ? (
-              comments.map((comment, index) => (
+              comments.map((comment) => (
                 <Comment
-                  key={index}
+                  key={comment._id}
                   commentId={comment._id}
                   userImage={comment.postedBy.image}
                   username={comment.postedBy.username}

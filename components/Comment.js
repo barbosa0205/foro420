@@ -239,10 +239,10 @@ const Comment = ({
               </p>
             )}
             {responsesPublished &&
-              responsesPublished.map((response, index) => (
+              responsesPublished.map((response) => (
                 <>
                   <CommentResp
-                    key={index}
+                    key={response._id}
                     userImage={response.postedBy.image}
                     username={response.postedBy.username}
                     comment={response.content}
