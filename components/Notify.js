@@ -1,14 +1,23 @@
 import useUser from 'contexts/useUser'
-import React from 'react'
+import React, { useState } from 'react'
 import Icon from './Icons/Icon'
+import { MenuPopup } from './MenuPopup'
 import PushAlerts from './PushAlerts'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Notify = ({ styles }) => {
-  const { pendientNotifications } = useUser()
+  const {
+    pendientNotifications,
+    showNotificationsSide,
+    setShowNotificationsSide,
+  } = useUser()
 
   return (
     <>
-      <div className={`${styles} relative`}>
+      <div
+        className={`${styles} relative`}
+        onClick={() => setShowNotificationsSide(!showNotificationsSide)}
+      >
         <Icon icon='ri-notification-2-line cursor-pointer'></Icon>
         {pendientNotifications?.length ? (
           // a red circle to indicate that user has pendient notifications
@@ -18,6 +27,8 @@ const Notify = ({ styles }) => {
         )}
       </div>
       <PushAlerts />
+      {/* Notification Slide*/}
+      {}
     </>
   )
 }

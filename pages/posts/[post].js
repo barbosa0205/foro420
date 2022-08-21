@@ -23,11 +23,11 @@ import savePost from 'helpers/savePost'
 const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   const router = useRouter()
   const { user, userF420, setUserF420, notify, setNotify } = useUser()
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState(post?.comments || [])
   const [openSettings, setOpenSettings] = React.useState(false)
   const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState(false)
   const [editPostState, setEditPostState] = React.useState(false)
-  const [likes, setLikes] = React.useState(post.likes)
+  const [likes, setLikes] = React.useState(post?.likes)
   const [postLiked, setPostLiked] = React.useState(likedPost)
   const [postSaved, setPostSaved] = React.useState(savedPost)
 
@@ -50,10 +50,6 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
       router.replace('/')
     }
   }
-
-  useEffect(() => {
-    setComments(post.comments)
-  }, [])
 
   useEffect(() => {
     if (notify) {
@@ -210,7 +206,9 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
                   postId={post._id}
                   responses={comment.responses}
                   postedbyId={comment.postedBy._id}
+                  comments={comments}
                   setComments={setComments}
+                  userId={comment.postedBy._id}
                 />
               ))
             ) : (
@@ -319,10 +317,18 @@ export const getServerSideProps = async (context) => {
 
     const cleanComments = comments.filter((comment) => comment)
 
+    //ordenar comentarios por mas  recientes
+    console.log('xd')
+    const sortComments = cleanComments.slice().sort((comment1, comment2) => {
+      const comment1UpdatedAt = comment1.updatedAt
+      const comment2UpdatedAt = comment2.updatedAt
+      return comment1UpdatedAt + comment2UpdatedAt
+    })
+
     post.postedBy = postedBy
     post.category = category
     post.type = type
-    post.comments = JSON.parse(JSON.stringify(cleanComments))
+    post.comments = JSON.parse(JSON.stringify(sortComments))
 
     console.log('post', post)
 

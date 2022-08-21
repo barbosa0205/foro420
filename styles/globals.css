@@ -190,7 +190,7 @@ td {
 
 /* post article */
 .postArticle {
-  min-width: 36rem;
+  min-width: 30rem;
 }
 
 @media (min-width: 500px) {

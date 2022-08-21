@@ -12,13 +12,36 @@ export default async function handler(req, res) {
           _id: query.uid,
         }).populate('notifications')
         if (user?.notifications.length) {
-          const notificationsPendients = user.notifications.filter(
-            (notify) => notify.pendientToView
+          const notificationsPromise = user.notifications.map(
+            async (notify) =>
+              await NotificationSchema.findOne({
+                _id: notify._id,
+              }).populate('from')
           )
-          res.status(200).json({
-            success: true,
-            notificationsPendients,
-          })
+          const notifications = await Promise.all(notificationsPromise)
+          console.log('notifications', notifications)
+          if (query.getnotifications === 'pendients') {
+            const notificationsPendients = notifications.filter(
+              (notify) => notify.pendientToView
+            )
+
+            res.status(200).json({
+              success: true,
+              notificationsPendients,
+            })
+          } else if (query.getnotifications === 'all') {
+            const allNotifications = notifications.slice(0, 11)
+            if (!allNotifications.length) {
+              res.status(200).json({
+                success: true,
+                message: 'no notifications',
+              })
+            }
+            res.status(200).json({
+              success: true,
+              notifications: allNotifications,
+            })
+          }
         } else {
           res.status(200).json({
             success: false,
@@ -39,6 +62,12 @@ export default async function handler(req, res) {
             _id: query.post,
           }).populate('postedBy')
           const user = post.postedBy
+          if (query.emisor === String(user._id)) {
+            return
+          }
+          const emisor = await UserSchema.findOne({
+            _id: query.emisor,
+          })
           const notification = new NotificationSchema({
             from: query.emisor,
             notification: 'Comento tu publicación',
@@ -56,6 +85,16 @@ export default async function handler(req, res) {
               },
             }
           )
+          res.status(200).json({
+            success: true,
+            message: 'notification saved successfully',
+            data: {
+              emisor,
+              notification: 'Comento tu publicación',
+              icon: notificationIcons.comment,
+            },
+            socket: user.socket,
+          })
         }
       } catch (error) {
         res.status(500).json({

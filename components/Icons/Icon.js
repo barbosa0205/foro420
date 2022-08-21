@@ -7,7 +7,7 @@ const Icon = ({
   color = 'text-gray-50',
   ...rest
 }) => {
-  return <i className={`${icon} ${color} ${size}  pl-4`} {...rest}></i>
+  return <i className={`${icon} ${color} ${size}`} {...rest}></i>
 }
 
 export default Icon

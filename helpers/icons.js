@@ -1,5 +1,5 @@
 export const notificationIcons = {
-  comment: 'chat-1-fill',
+  comment: 'ri-chat-4-fill',
 
   like: 'ri-thumb-up-fill',
 

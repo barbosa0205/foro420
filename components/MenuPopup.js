@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 export const MenuPopup = ({ top, right, left, bottom, children }) => {
   return (
-    <motion.div
+    <motion.ul
       initial={{
         opacity: 0,
       }}
@@ -16,9 +16,9 @@ export const MenuPopup = ({ top, right, left, bottom, children }) => {
       transition={{
         duration: 0.1,
       }}
-      className={` absolute ${top} ${right} ${bottom} ${left} w-fit bg-stone-100 shadow-md`}
+      className={` absolute ${top} ${right} ${bottom} ${left} w-fit bg-stone-100 shadow-md py-2 px-5`}
     >
       {children}
-    </motion.div>
+    </motion.ul>
   )
 }

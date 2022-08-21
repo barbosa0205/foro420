@@ -63,7 +63,7 @@ const Post = ({ data }) => {
             }}
             className='postArticle flex items-center w-full min-h-fit max-h-44 p-2 rounded-xl bg-white overflow-hidden hover:bg-gray-50'
           >
-            <div className='flex justify-center items-center max-w-xs min-w-fit'>
+            <div className='flex justify-center items-center max-w-xs min-w-min'>
               <Image
                 src={data.image}
                 alt={data.title}

@@ -76,56 +76,76 @@ export default async function handler(req, res) {
             _id: body.id,
           })
           if (comment.responses.length) {
+            //Eliminando comentario de Respuesta
             comment.responses.forEach(async (response) => {
               await CommentSchema.deleteOne({
                 _id: response,
               })
             })
           }
+
+          //Eliminando comentario principal
           const commentDeleted = await CommentSchema.deleteOne({
             _id: body.id,
           })
 
           const post = await PostSchema.findOne({
             _id: body.postId,
-          })
+          }).populate('comments')
 
-          const newComments = post.comments.filter((c) => c === body.id)
+          let newComments = post.comments.filter(
+            (c) => String(c._id) !== body.id
+          )
+
+          const commentsIds = newComments.map((comment) => comment._id)
 
           await PostSchema.findOneAndUpdate(
             {
               _id: body.postId,
             },
             {
-              comments: newComments,
+              comments: commentsIds,
             }
           )
+          const newPost = await PostSchema.findOne({
+            _id: post._id,
+          })
+
+          let thisIsNewComments = await CommentSchema.find({
+            _id: {
+              $in: newPost.comments,
+            },
+          }).populate('postedBy')
+
+          thisIsNewComments = await Promise.all(thisIsNewComments)
+
+          console.log('this is new comments', thisIsNewComments)
+
           res.status(200).json({
             success: true,
             message: 'Comentario eliminado correctamente',
+            newComments: thisIsNewComments,
           })
         } else {
-          const comment = await CommentSchema.findOne({
-            _id: body.commentId,
-          })
-          let responses = comment.responses
+          console.log('222222')
 
-          responses = responses.filter((r) => {
-            return body.id !== r.toString()
+          const respDeleted = await CommentSchema.deleteOne({
+            _id: body.id,
           })
 
-          const newResps = await CommentSchema.findOneAndUpdate(
+          //delete RespId from Comment
+
+          const comment = await CommentSchema.findOneAndUpdate(
             {
               _id: body.commentId,
             },
             {
-              responses: responses,
+              $pull: {
+                responses: body.id,
+              },
             }
           )
 
-          let commentDeleted = await CommentSchema.deleteOne({
-            _id: body.id,
-          })
           res.status(200).json({
             success: true,
             message: 'Respuesta eliminada correctamente',

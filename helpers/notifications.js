@@ -1,6 +1,20 @@
+export const getAllNotifications = async (uid) => {
+  try {
+    const resp = await fetch(
+      `/api/notifications?uid=${uid}&getnotifications=all`
+    )
+    const data = await resp.json()
+    return data
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
 export const getPendientNotifications = async ({ uid }) => {
   try {
-    const resp = await fetch(`/api/notifications?uid=${uid}`)
+    const resp = await fetch(
+      `/api/notifications?uid=${uid}&getnotifications=pendients`
+    )
     const data = await resp.json()
 
     return data
@@ -18,6 +32,7 @@ export const sendNotification = async (type, { user, postId }) => {
       }
     )
     const data = await resp.json()
+    return data
   } catch (error) {
     console.log('error', error)
   }
