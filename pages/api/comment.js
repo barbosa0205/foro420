@@ -146,10 +146,11 @@ export default async function handler(req, res) {
             }
           )
 
+          console.log('id de respuesta eliminado de comentario')
+
           res.status(200).json({
             success: true,
             message: 'Respuesta eliminada correctamente',
-            responses,
           })
         }
       } catch (error) {

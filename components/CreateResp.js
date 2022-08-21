@@ -6,7 +6,7 @@ const CreateResp = ({
   postId,
   parentComment,
   setOpenCreateResp,
-  setResponsesPublished,
+  setResponsesToShow,
 }) => {
   const [resp, setResp] = React.useState('')
   const { userF420 } = useUser()
@@ -32,11 +32,11 @@ const CreateResp = ({
     const data = await response.json()
     console.log('data', data)
     setOpenCreateResp(false)
-    setResponsesPublished((prev) => [
-      ...prev,
+    setResponsesToShow((prev) => [
       {
         ...data,
       },
+      ...prev,
     ])
   }
 

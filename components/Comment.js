@@ -33,15 +33,29 @@ const Comment = ({
   const [editComment, setEditComment] = React.useState(false)
   const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState(false)
 
-  const showResponses = async ({ qty, limit }) => {
-    if (qty <= limit) {
-      const res = await fetch(
-        `/api/resp?commentId=${commentId}&task=getallresponses`
-      )
-      const data = await res.json()
-      setResponsesToShow(data.responses)
-      const newLength = data.responses.length - responsesLength
-      setResponsesLength(newLength)
+  const showResponses = async (showResp) => {
+    try {
+      if (!showResp) {
+        const res = await fetch(
+          `/api/resp?commentId=${commentId}&task=getallresponses`
+        )
+        const data = await res.json()
+        const newLength = data.responses.length
+        setResponsesToShow([])
+        setResponsesLength(newLength)
+        return
+      }
+      if (showResp.qty <= showResp.limit) {
+        const res = await fetch(
+          `/api/resp?commentId=${commentId}&task=getallresponses`
+        )
+        const data = await res.json()
+        setResponsesToShow(data.responses)
+        const newLength = data.responses.length - responsesLength
+        setResponsesLength(newLength)
+      }
+    } catch (error) {
+      console.log('error mostrar o ocultar respuestas', error)
     }
   }
 
@@ -102,9 +116,9 @@ const Comment = ({
 
   return (
     <>
-      {postId && (
-        <>
-          <AnimatePresence>
+      <AnimatePresence key={commentId}>
+        {postId && (
+          <>
             <motion.article
               initial={{
                 opacity: 0,
@@ -235,7 +249,8 @@ const Comment = ({
                 }
                 className='text-center cursor-pointer my-2'
               >
-                Ver {responsesLength <= 99 ? responsesLength : '99+'} respuestas
+                Ver {responsesLength <= 50 ? responsesLength : '50+'}{' '}
+                {responsesLength === 1 ? 'respuesta' : 'respuestas'}
               </p>
             )}
             {responsesPublished &&
@@ -260,13 +275,13 @@ const Comment = ({
                 postId={postId}
                 parentComment={commentId}
                 setOpenCreateResp={setOpenCreateResp}
-                setResponsesPublished={setResponsesPublished}
+                setResponsesToShow={setResponsesToShow}
               />
             )}
             {responsesToShow.length > 0 &&
               responsesToShow.map((response, index) => (
                 <CommentResp
-                  key={index}
+                  key={response._id}
                   userImage={response.postedBy.image}
                   username={response.postedBy.username}
                   comment={response.content}
@@ -277,9 +292,19 @@ const Comment = ({
                   setNotify={setNotify}
                 />
               ))}
-          </AnimatePresence>
-        </>
-      )}
+            {responsesToShow.length ? (
+              <p
+                onClick={() => showResponses(undefined)}
+                className='text-center cursor-pointer my-2'
+              >
+                Ocultar {responsesLength === 1 ? 'respuesta' : 'respuestas'}
+              </p>
+            ) : (
+              ''
+            )}
+          </>
+        )}
+      </AnimatePresence>
 
       <hr />
       {openDeleteQuestion && (

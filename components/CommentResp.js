@@ -65,6 +65,7 @@ const CommentResp = ({
       })
       setOpenDeleteQuestion(false)
     } else {
+      console.log(data)
       setNotify('No se pudo borrar la respuesta')
       setOpenDeleteQuestion(false)
     }
