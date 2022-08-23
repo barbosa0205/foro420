@@ -14,7 +14,7 @@ import useUser from 'contexts/useUser'
 import LinkItem from './LinkItem'
 import { NotificationsAside } from './NotificationsAside'
 import { notificationIcons } from 'helpers/icons'
-
+import loadingImage from 'assets/loader.gif'
 const Navbar = () => {
   const {
     user,
@@ -31,6 +31,7 @@ const Navbar = () => {
   const { height, width } = useWindowDimensions()
 
   const [showSide, setShowSide] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   useEffect(() => {
     if (newNotificationAlert) {
@@ -154,7 +155,7 @@ const Navbar = () => {
                   </h3>
                 </div>
                 <section>
-                  {userF420?._id || user.image ? (
+                  {(!loading && userF420?._id) || user.image ? (
                     <>
                       <LinkItem
                         icon='ri-home-2-line'
@@ -221,7 +222,7 @@ const Navbar = () => {
                         }}
                       />
                     </>
-                  ) : (
+                  ) : !loading ? (
                     <div>
                       <LinkItem
                         icon='ri-login-box-line'
@@ -233,6 +234,13 @@ const Navbar = () => {
                         }}
                       />
                     </div>
+                  ) : (
+                    <Image
+                      src={loadingImage}
+                      width={100}
+                      height={100}
+                      alt='loading'
+                    />
                   )}
                 </section>
               </section>

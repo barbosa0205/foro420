@@ -56,8 +56,12 @@ export const NotificationCard = ({ notify, ...rest }) => {
         {/* TODO: Create logic  of setNotifyViewed and deleteNotify */}
         {openMenu && (
           <MenuPopup top='top-6' right={'right-14'}>
-            <p className='cursor-pointer my-2'>Marcar como leído</p>
-            <p className='cursor-pointer my-2'>Eliminar notificación</p>
+            <p className='cursor-pointer my-2' onClick={setNotifyViewed}>
+              Marcar como leído
+            </p>
+            <p className='cursor-pointer my-2' onClick={deleteNotify}>
+              Eliminar notificación
+            </p>
           </MenuPopup>
         )}
       </li>
