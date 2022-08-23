@@ -8,6 +8,7 @@ import Modal from './Modal'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Alert } from './Alert'
 import { useRouter } from 'next/router'
+import loadingImage from 'assets/loader.gif'
 const Comment = ({
   postId,
   userImage,
@@ -32,6 +33,7 @@ const Comment = ({
   const [contentEditable, setContentEditable] = React.useState('')
   const [editComment, setEditComment] = React.useState(false)
   const [openDeleteQuestion, setOpenDeleteQuestion] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   const showResponses = async (showResp) => {
     try {
@@ -43,9 +45,11 @@ const Comment = ({
         const newLength = data.responses.length
         setResponsesToShow([])
         setResponsesLength(newLength)
+
         return
       }
       if (showResp.qty <= showResp.limit) {
+        setLoading(true)
         const res = await fetch(
           `/api/resp?commentId=${commentId}&task=getallresponses`
         )
@@ -53,6 +57,7 @@ const Comment = ({
         setResponsesToShow(data.responses)
         const newLength = data.responses.length - responsesLength
         setResponsesLength(newLength)
+        setLoading(false)
       }
     } catch (error) {
       console.log('error mostrar o ocultar respuestas', error)
@@ -135,7 +140,7 @@ const Comment = ({
               transition={{
                 duration: 0.3,
               }}
-              className='width-full pt-2 pb-4 mr-5'
+              className='width-full pt-2 pb-4 mr-5 flex flex-col items-center'
             >
               <div className='relative w-full px-2 pb-5 flex items-center'>
                 <Image
@@ -253,7 +258,7 @@ const Comment = ({
                 {responsesLength === 1 ? 'respuesta' : 'respuestas'}
               </p>
             )}
-            {responsesPublished &&
+            {responsesPublished ? (
               responsesPublished.map((response) => (
                 <>
                   <CommentResp
@@ -268,7 +273,10 @@ const Comment = ({
                     setNotify={setNotify}
                   />
                 </>
-              ))}
+              ))
+            ) : (
+              <div className='w-full flex items-center justify-center'></div>
+            )}
 
             {openCreateresp && (
               <CreateResp
@@ -292,6 +300,16 @@ const Comment = ({
                   setNotify={setNotify}
                 />
               ))}
+            {loading && (
+              <section className='w-full flex items-center justify-center'>
+                <Image
+                  src={loadingImage}
+                  width={90}
+                  height={90}
+                  alt={'loading'}
+                />
+              </section>
+            )}
             {responsesToShow.length ? (
               <p
                 onClick={() => showResponses(undefined)}
