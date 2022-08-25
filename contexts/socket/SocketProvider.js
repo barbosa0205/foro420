@@ -2,7 +2,7 @@ import useUser from 'contexts/useUser'
 import React, { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 export const socketContext = React.createContext()
-const ENDPOINT = 'foro-420.herokuapp.com'
+const ENDPOINT = 'foro-420-socket-io.onrender.com'
 
 const SocketProvider = ({ children }) => {
   const { userF420 } = useUser()
