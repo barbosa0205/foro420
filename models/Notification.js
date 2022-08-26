@@ -18,7 +18,7 @@ const NotificationSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    notifyWatched: {
+    notifyIsWatched: {
       type: Boolean,
       default: false,
     },
