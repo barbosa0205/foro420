@@ -100,7 +100,8 @@ function Home({ postsToShow, questionsPosts }) {
           )}
         </Container>
       </main>
-      <CreatePostButton />
+
+      {/* <CreatePostButton /> */}
     </>
   )
 }

@@ -4,14 +4,28 @@ import Icon from './Icons/Icon'
 import formatDistance from 'date-fns/formatDistance'
 import { es } from 'date-fns/locale'
 import { MenuPopup } from './MenuPopup'
+import axios from 'axios'
 export const NotificationCard = ({ notify, ...rest }) => {
   const [openMenu, setOpenMenu] = useState(false)
+
+  const setNotifyViewed = async () => {
+    try {
+      const data = await axios.put(
+        `/api/notifications/notify?method=markAsRead`
+      )
+    } catch (error) {
+      console.log('error al marcar como leída la notificacion')
+    }
+  }
+  const deleteNotify = () => {}
+
   useEffect(() => {
     console.log('notify', notify)
     const date = new Date()
     const dateToCompare = new Date(notify.createdAt)
     console.log(formatDistance(date, dateToCompare))
   }, [])
+
   return (
     <>
       <li
@@ -56,10 +70,16 @@ export const NotificationCard = ({ notify, ...rest }) => {
         {/* TODO: Create logic  of setNotifyViewed and deleteNotify */}
         {openMenu && (
           <MenuPopup top='top-6' right={'right-14'}>
-            <p className='cursor-pointer my-2' onClick={setNotifyViewed}>
+            <p
+              className='cursor-pointer my-2'
+              onClick={() => setNotifyViewed(notify._id)}
+            >
               Marcar como leído
             </p>
-            <p className='cursor-pointer my-2' onClick={deleteNotify}>
+            <p
+              className='cursor-pointer my-2'
+              onClick={() => deleteNotify(notify._id)}
+            >
               Eliminar notificación
             </p>
           </MenuPopup>

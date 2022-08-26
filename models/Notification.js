@@ -18,6 +18,10 @@ const NotificationSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    NotifyWatched: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     toJSON: {

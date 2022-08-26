@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           console.log('notifications', notifications)
           if (query.getnotifications === 'pendients') {
             const notificationsPendients = notifications.filter(
-              (notify) => notify.pendientToView
+              (notify) => notify.pendient
             )
 
             res.status(200).json({
