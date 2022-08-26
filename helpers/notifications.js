@@ -27,7 +27,7 @@ export const sendNotification = async (type, { user, postId }) => {
     const resp = await fetch(
       `/api/notifications?emisor=${user}&post=${postId}&type=${type}`,
       {
-        method: 'PUT',
+        method: 'POST',
         'content-type': 'application/json',
       }
     )

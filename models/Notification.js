@@ -20,7 +20,7 @@ const NotificationSchema = new Schema(
     },
     notifyWatched: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   {

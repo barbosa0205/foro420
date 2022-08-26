@@ -5,7 +5,8 @@ import { NotificationCard } from './NotificationCard'
 import LoadingImage from 'assets/loader.gif'
 import Image from 'next/image'
 export const NotificationsAside = () => {
-  const { userF420, pendientNotifications } = useUser()
+  const { userF420, pendientNotifications, setPendientNotifications } =
+    useUser()
   const [allNotifications, setAllNotifications] = React.useState([])
   const [loading, setLoading] = React.useState(false)
 
@@ -28,6 +29,24 @@ export const NotificationsAside = () => {
       setAllNotifications([])
     }
   }, [])
+
+  useEffect(() => {
+    if (allNotifications.length) {
+      // colocamos las notificaciones con la porpiedad notifyWatched en true
+      ;(async () => {
+        try {
+          const data = await fetch(
+            '/api/notifications?method=markAsNotifyWatched',
+            {
+              method: 'PUT',
+            }
+          )
+        } catch (error) {
+          console.log('no se pudo poner como')
+        }
+      })()
+    }
+  }, [allNotifications])
 
   return (
     <aside

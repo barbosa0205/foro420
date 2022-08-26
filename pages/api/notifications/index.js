@@ -3,7 +3,7 @@ import PostSchema from 'models/Post'
 import NotificationSchema from 'models/Notification'
 import { notificationIcons } from 'helpers/icons'
 export default async function handler(req, res) {
-  const { method, query } = req
+  const { method, query, body } = req
 
   switch (method) {
     case 'GET':
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           console.log('notifications', notifications)
           if (query.getnotifications === 'pendients') {
             const notificationsPendients = notifications.filter(
-              (notify) => notify.pendient
+              (notify) => notify.notifyWatched
             )
 
             res.status(200).json({
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
         })
       }
       break
-    case 'PUT':
+    case 'POST':
       try {
         if (query.type === 'comment') {
           const post = await PostSchema.findOne({
@@ -100,6 +100,22 @@ export default async function handler(req, res) {
         res.status(500).json({
           success: false,
           message: 'algo salio mal al enviar notificacion',
+        })
+      }
+      break
+    case 'PUT':
+      try {
+        if (query.method === 'markAsNotifyWatched') {
+          const notifyNotWatched = await NotificationSchema.find({
+            notifyWatched: false,
+          })
+
+          console.log('notifyNotWatched', notifyNotWatched)
+        }
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: 'algo salio mal al cambiar notifyWatched',
         })
       }
   }
