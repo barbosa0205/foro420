@@ -4,17 +4,37 @@ import Icon from './Icons/Icon'
 import formatDistance from 'date-fns/formatDistance'
 import { es } from 'date-fns/locale'
 import { MenuPopup } from './MenuPopup'
-import axios from 'axios'
-export const NotificationCard = ({ notify, ...rest }) => {
+
+export const NotificationCard = ({
+  notify,
+  allNotifications,
+  setAllNotifications,
+  ...rest
+}) => {
   const [openMenu, setOpenMenu] = useState(false)
 
   const setNotifyViewed = async () => {
     try {
-      const data = await axios.put(
-        `/api/notifications/notify?method=markAsRead`
+      const resp = await fetch(
+        `/api/notifications/notify?method=markAsRead&id=${notify._id}`,
+        {
+          method: 'PUT',
+        }
       )
+      const data = await resp.json()
+      if (data.success) {
+        let notifyFind = allNotifications.find((n) => n._id === notify._id)
+        notifyFind.pendientToView = false
+        const notifyIndex = allNotifications.indexOf(notifyFind)
+        const allNotificationsCopy = [...allNotifications]
+        const arraySliced = allNotificationsCopy.slice(0, notifyIndex)
+        console.log('arraySliced', arraySliced)
+        const nextOfArray = [...allNotifications].slice(notifyIndex + 1)
+        console.log('nextOfArray', nextOfArray)
+        setAllNotifications([...arraySliced, notifyFind, ...nextOfArray])
+      }
     } catch (error) {
-      console.log('error al marcar como leída la notificacion')
+      console.log('error al marcar como leída la notificacion', error)
     }
   }
   const deleteNotify = () => {}
@@ -29,7 +49,9 @@ export const NotificationCard = ({ notify, ...rest }) => {
   return (
     <>
       <li
-        className='relative w-full shadow-gray-200 shadow-md py-5 px-5 my-1 list-none'
+        className={`relative w-full shadow-gray-200 shadow-md py-5 px-5 my-1 list-none ${
+          notify.pendientToView && 'bg-cyan-700 bg-opacity-20'
+        }`}
         {...rest}
       >
         <div className='w-full flex items-center justify-end'>
@@ -39,8 +61,9 @@ export const NotificationCard = ({ notify, ...rest }) => {
             onClick={() => setOpenMenu(!openMenu)}
           />
         </div>
-        <header className='w-full flex items-center'>
+        <header className='w-full flex items-center mb-2'>
           <Image
+            className='rounded-full'
             src={notify.from.image}
             width={60}
             height={60}

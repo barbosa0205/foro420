@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     case 'PUT':
       try {
         if (query.method === 'markAsRead') {
-          const notification = await NotifySchema.updateOne(
+          await NotifySchema.updateOne(
             {
               _id: query.id,
             },
@@ -13,10 +13,12 @@ export default async function handler(req, res) {
               pendientToView: false,
             }
           )
+
+          // const allNotifications = await NotificationSchema.find({})
+
           res.status(200).json({
             success: true,
             message: 'Notificacion acttualizada como vista',
-            notification,
           })
         }
       } catch (error) {

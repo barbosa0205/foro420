@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           console.log('notifications', notifications)
           if (query.getnotifications === 'pendients') {
             const notificationsPendients = notifications.filter(
-              (notify) => notify.notifyWatched
+              (notify) => !notify.notifyWatched
             )
 
             res.status(200).json({
@@ -110,7 +110,22 @@ export default async function handler(req, res) {
             notifyWatched: false,
           })
 
-          console.log('notifyNotWatched', notifyNotWatched)
+          const notifyIds = notifyNotWatched.map((notify) => notify._id)
+
+          await NotificationSchema.update(
+            {
+              _id: {
+                $in: notifyIds,
+              },
+            },
+            {
+              notifyWatched: true,
+            }
+          )
+          res.status(200).json({
+            success: true,
+            message: 'notifyWatched updated successfully',
+          })
         }
       } catch (error) {
         res.status(500).json({

@@ -35,12 +35,16 @@ export const NotificationsAside = () => {
       // colocamos las notificaciones con la porpiedad notifyWatched en true
       ;(async () => {
         try {
-          const data = await fetch(
+          const resp = await fetch(
             '/api/notifications?method=markAsNotifyWatched',
             {
               method: 'PUT',
             }
           )
+          const data = await resp.json()
+          if (data.success) {
+            setPendientNotifications([])
+          }
         } catch (error) {
           console.log('no se pudo poner como')
         }
@@ -57,7 +61,12 @@ export const NotificationsAside = () => {
       <section>
         {allNotifications.length
           ? allNotifications.map((notify) => (
-              <NotificationCard notify={notify} key={notify._id} />
+              <NotificationCard
+                notify={notify}
+                key={notify._id}
+                allNotifications={allNotifications}
+                setAllNotifications={setAllNotifications}
+              />
             ))
           : !loading && <p>No tienes notificaciones</p>}
 
