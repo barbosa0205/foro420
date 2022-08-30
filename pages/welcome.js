@@ -3,10 +3,9 @@ import React, { useState, useCallback } from 'react'
 import { completeProfileErrors } from 'helpers/completeProfileErrors'
 import { UseForm } from 'hooks/useForm'
 import { useDropzone } from 'react-dropzone'
-import defaultUserImage from 'assets/default_user.jpg'
+
 import Head from 'next/head'
-import UserSchema from 'models/F420User'
-import { useSession, getSession } from 'next-auth/react'
+
 import { useRouter } from 'next/router'
 import useUser from 'contexts/useUser'
 const Welcome = () => {
@@ -17,27 +16,12 @@ const Welcome = () => {
       {
         fullname: user.name,
         username: '',
-        email: user.email,
         birthday: '',
       },
       completeProfileErrors
     )
 
-  const [image, setImage] = useState(defaultUserImage)
-
   const [dataError, setDataError] = useState([])
-
-  const onDrop = useCallback((acceptedFiles) => {
-    const imageUrl = URL.createObjectURL(acceptedFiles[0])
-    console.log(imageUrl)
-    setImage(imageUrl)
-  }, [])
-
-  //useDropzone hook
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: 'image/*',
-    onDrop,
-  })
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -47,13 +31,13 @@ const Welcome = () => {
       console.log('wrong')
       return
     }
-    const { fullname, username, email, birthday } = formValues
+    const { fullname, username, birthday } = formValues
     const user420 = {
       fullname,
       username,
-      email,
       birthday,
-      image,
+      email: user.email,
+      image: user.image,
     }
 
     try {
@@ -89,12 +73,6 @@ const Welcome = () => {
     }
   }, [])
 
-  React.useEffect(() => {
-    if (user.image) {
-      setImage(user.image)
-    }
-  }, [user])
-
   return (
     <>
       <Head>
@@ -118,23 +96,6 @@ const Welcome = () => {
           onSubmit={handleSubmit}
           className='w-full flex flex-col items-center justify-center'
         >
-          <div className='w-full h-full flex flex-col items-center my-5'>
-            <p className='text-primary text-gray-800 mb-5'>Foto de perfil</p>
-            <p className='text-primary text-center text-xl text-gray-400 font-bold mb-2'>
-              Arrastra una imagen o da click para cambiar
-            </p>
-            <div className='relative cursor-pointer' {...getRootProps()}>
-              <Image
-                className='rounded-full'
-                src={image}
-                alt='user profile'
-                width={100}
-                height={100}
-              />
-              <input {...getInputProps()} />
-            </div>
-          </div>
-
           <label
             className='text-secondary mt-5 mb-2 text-gray-600'
             htmlFor='fullname'

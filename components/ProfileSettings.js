@@ -10,6 +10,7 @@ import ButtonPrimary from './ButtonPrimary'
 import Notification from './Notification'
 import axios from 'axios'
 import loadingImg from 'assets/loader.gif'
+import { uploadImageToCloudinary } from 'helpers/cloudinary/uploadImageToCloudinary'
 const ProfileSettings = () => {
   const { userF420, setUserF420, notify, setNotify } = useUser()
   const [profileValues, handleChange, validateErrorSubmit, errors] = UseForm(
@@ -45,62 +46,6 @@ const ProfileSettings = () => {
     onDrop,
   })
 
-  const uploadImageToCloudinary = async (formData) => {
-    try {
-      const respImageUploaded = axios.post(
-        `https://api.cloudinary.com/v1_1/foro420-media/image/upload?api_key=$828592597243784`,
-        formData
-      )
-      const dataImageUpload = await respImageUploaded
-
-      const imageId = dataImageUpload.data.public_id
-
-      //verify if cloudinary id already exists and delete the image from cloudinary
-      const resp = await fetch(`api/cloudinary?uid=${userF420._id}`, {
-        method: 'GET',
-        'content-type': 'application/json',
-      })
-      const data = await resp.json()
-
-      if (data.cloudinary) {
-        const resp = await fetch(
-          '/api/cloudinary?cloudinary=' + data.cloudinary,
-          {
-            method: 'DELETE',
-          }
-        )
-        setNewCloudinaryProfile(imageId, userF420._id)
-        return (
-          'https://res.cloudinary.com/foro420-media/image/upload/v1660276446/' +
-          imageId
-        )
-      } else {
-        setNewCloudinaryProfile(imageId, userF420._id)
-        return (
-          'https://res.cloudinary.com/foro420-media/image/upload/v1660276446/' +
-          imageId
-        )
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  const setNewCloudinaryProfile = async (imageId, uid) => {
-    try {
-      const resp = await fetch(
-        `api/cloudinary?uid=${uid}&image_id=${imageId}`,
-        {
-          method: 'PUT',
-          'content-Type': 'application/json',
-        }
-      )
-      const data = await resp.json()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const applyProfileChanges = async () => {
     try {
       if (
@@ -122,9 +67,10 @@ const ProfileSettings = () => {
       formData.append('file', imageFile)
       formData.append('upload_preset', 'p6nlpprc')
 
-      //TODO:
-
-      const cloudinaryImageUrl = await uploadImageToCloudinary(formData)
+      const cloudinaryImageUrl = await uploadImageToCloudinary(
+        formData,
+        userF420._id
+      )
 
       const resp = await fetch(
         `api/profile/profile-settings?uid=${userF420._id}`,
