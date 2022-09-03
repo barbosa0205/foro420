@@ -15,6 +15,7 @@ import LinkItem from './LinkItem'
 import { NotificationsAside } from './NotificationsAside'
 import { notificationIcons } from 'helpers/icons'
 import loadingImage from 'assets/loader.gif'
+import { Message } from './Message'
 const Navbar = () => {
   const {
     user,
@@ -44,7 +45,13 @@ const Navbar = () => {
   return (
     <>
       {/* NAVBAR */}
-      <nav className='relative flex items-center justify-between lg:justify-around px-5  w-full h-24 py-2 sm:h-32 bg-gradient-to-tl from-emerald-600 to-emerald-500'>
+      <nav
+        className={`flex relative min-h-fit ${
+          width <= 290 ? 'flex-col' : 'items-center justify-between'
+        } lg:justify-around px-5  w-full py-2 sm:h-32 bg-gradient-to-tl from-emerald-600 to-emerald-500`}
+      >
+        {/* Logo */}
+
         <div className='flex items-center justify-evenly w-fit'>
           <Icon
             icon='ri-menu-fill cursor-pointer md:hidden'
@@ -104,6 +111,7 @@ const Navbar = () => {
               <Icon icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'} />
             </section>
           )}
+          {userF420?._id && <Message styles={'mr-5'} />}
           {userF420?._id && <Notify styles={'mr-5'} />}
         </div>
       </nav>

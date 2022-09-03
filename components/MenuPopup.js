@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-export const MenuPopup = ({ top, right, left, bottom, children }) => {
+export const MenuPopup = ({ top, right, left, bottom, children, ...rest }) => {
   return (
     <motion.ul
       initial={{
@@ -17,6 +17,7 @@ export const MenuPopup = ({ top, right, left, bottom, children }) => {
         duration: 0.1,
       }}
       className={` absolute ${top} ${right} ${bottom} ${left} w-fit bg-stone-100 shadow-md py-2 px-5`}
+      {...rest}
     >
       {children}
     </motion.ul>

@@ -44,7 +44,7 @@
 * {
   --main-green: #00a65a;
   --border-green: #009b55;
-  --low-gray: #f6f6f6;
+  --low-gray: #e8e8e8;
   --dark: #000a06;
   box-sizing: border-box;
   margin: 0;
@@ -148,8 +148,8 @@ td {
   min-height: 20rem;
 }
 .profileImageSize {
-  max-width: 10rem;
-  max-height: 10rem;
+  width: 10rem;
+  height: 10rem;
 }
 
 @media (min-width: 630px) {
@@ -193,19 +193,39 @@ td {
   min-width: 30rem;
 }
 
+.showCoverImage {
+  min-width: 25rem;
+  max-width: 150rem;
+}
+
+@media (min-width: 400px) {
+  .profileImageSize {
+    width: 13rem;
+    height: 13rem;
+  }
+}
+
 @media (min-width: 500px) {
+  .profileImageSize {
+    width: 15rem;
+    height: 15rem;
+  }
   .imagesCoverContainer {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (min-width: 768px) {
+  .profileImageSize {
+    width: 18rem;
+    height: 18rem;
+  }
   .coverimage {
     max-height: 35rem;
   }
 }
 @media (min-width: 1000px) {
   .coverimage {
-    max-height: 50rem;
+    max-height: 40rem;
   }
 }
 @media (min-width: 1400px) {

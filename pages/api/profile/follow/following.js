@@ -1,6 +1,6 @@
 import UserSchema from 'models/F420User'
 
-const handler = async (req, res) => {
+export default async function handler(req, res) {
   const { method, query } = req
   switch (method) {
     case 'GET':
@@ -22,5 +22,3 @@ const handler = async (req, res) => {
       break
   }
 }
-
-export default handler
