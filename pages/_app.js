@@ -5,15 +5,18 @@ import Layout from 'components/Layout'
 import 'tailwindcss/tailwind.css'
 import 'styles/globals.css'
 import SocketProvider from 'contexts/socket/SocketProvider'
+import MessageProvider from 'contexts/messages/MessageProvider'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
       <UserProvider>
         <SocketProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <MessageProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MessageProvider>
         </SocketProvider>
       </UserProvider>
     </SessionProvider>

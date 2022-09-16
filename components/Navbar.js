@@ -111,8 +111,12 @@ const Navbar = () => {
               <Icon icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'} />
             </section>
           )}
-          {userF420?._id && <Message styles={'mr-5'} />}
-          {userF420?._id && <Notify styles={'mr-5'} />}
+          {userF420?._id && (
+            <>
+              <Message styles={'mr-5'} />
+              <Notify styles={'mr-5'} />
+            </>
+          )}
         </div>
       </nav>
 

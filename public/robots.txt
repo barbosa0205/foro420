@@ -1,0 +1,4 @@
+user-agent: *
+Allow: /
+
+Sitemap: https://foro420.vercel.app/api/sitemap

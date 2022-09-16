@@ -1,5 +1,5 @@
 import React from 'react'
-import { socketContext, socketProvider } from './SocketProvider'
+import { socketContext } from './SocketProvider'
 const useSocket = () => {
   const contextValue = React.useContext(socketContext)
   return contextValue

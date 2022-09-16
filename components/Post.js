@@ -61,7 +61,7 @@ const Post = ({ data }) => {
             transition={{
               type: 'just',
             }}
-            className='postArticle flex items-center w-full min-h-fit max-h-44 p-2 rounded-xl bg-white overflow-hidden hover:bg-gray-50'
+            className='postArticle flex items-center w-full min-h-fit p-2 rounded-xl bg-white overflow-hidden hover:bg-gray-50'
           >
             <div className='flex justify-center items-center max-w-xs min-w-min'>
               <Image

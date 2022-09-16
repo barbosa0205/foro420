@@ -1,7 +1,7 @@
 import { useSession, getSession, signIn } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ButtonPrimary from 'components/ButtonPrimary'
 import LeafImage from 'assets/SVG/leafThug.svg'
 import Head from 'next/head'
@@ -12,7 +12,7 @@ const Login = () => {
     if (status === 'authenticated') {
       router.push('/')
     }
-  })
+  }, [status])
 
   return (
     <>

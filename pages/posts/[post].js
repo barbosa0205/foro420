@@ -20,6 +20,7 @@ import { EditMode } from 'components/EditMode'
 import Notification from 'components/Notification'
 import like from 'helpers/likePost'
 import savePost from 'helpers/savePost'
+import ButtonPrimary from 'components/ButtonPrimary'
 const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   const router = useRouter()
   const { user, userF420, setUserF420, notify, setNotify } = useUser()
@@ -62,7 +63,7 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   return (
     <>
       {!editPostState ? (
-        <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto bg-white px-2'>
+        <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto bg-white px-2 pb-10'>
           <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
             <Image
               src={editData.image}
@@ -182,7 +183,7 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
             ></div>
           </section>
           <hr />
-          <section className='w-full pt-2 mt-14 bg-white'>
+          <section className='flex flex-col items-center w-full pt-2 mt-14 bg-white'>
             <h2 className='text-center font-medium text-3xl mb-5'>
               Comentarios
             </h2>
@@ -216,6 +217,14 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
               <p className='text-center my-10'>
                 Se el primero en comentar esta publicación
               </p>
+            )}
+            {!user?.email && !userF420?._id && (
+              <ButtonPrimary
+                onClick={() => router.push('/login')}
+                text={'INICIA SESIÓN'}
+                bgColor='bg-emerald-600'
+                color='text-gray-50'
+              />
             )}
           </section>
         </main>
