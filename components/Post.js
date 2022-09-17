@@ -8,6 +8,8 @@ import useUser from 'contexts/useUser'
 import like from 'helpers/likePost'
 import savePost from 'helpers/savePost'
 import Notification from './Notification'
+import format from 'date-fns/format'
+import { es } from 'date-fns/locale'
 const Post = ({ data }) => {
   const router = useRouter()
   const { userF420, user, notify, setNotify } = useUser()
@@ -112,58 +114,68 @@ const Post = ({ data }) => {
                 </Link>
               </div>
               {/*footer container*/}
-              <footer className='w-fit flex justify-evenly items-center pb-2'>
-                <button
-                  onClick={() =>
-                    like(
-                      data,
-                      user,
-                      userF420,
-                      setLikes,
-                      setPostLiked,
-                      router,
-                      likes
-                    )
-                  }
-                  className='flex items-center justify-center mx-1 px-2 bg-white shadow-sm shadow-gray-200 rounded-md'
-                >
-                  <Icon
-                    icon={`${
-                      postLiked ? 'ri-thumb-up-fill' : 'ri-thumb-up-line'
-                    }`}
-                    color='text-emerald-600'
-                  />
-                  <p className='px-2 text-emerald-700'>{likes}</p>
-                </button>
+              <footer className='w-full flex justify-between items-center flex-wrap'>
+                <section className='w-fit flex justify-evenly items-center pb-2'>
+                  <button
+                    onClick={() =>
+                      like(
+                        data,
+                        user,
+                        userF420,
+                        setLikes,
+                        setPostLiked,
+                        router,
+                        likes
+                      )
+                    }
+                    className='flex items-center justify-center mx-1 px-2 bg-white shadow-sm shadow-gray-200 rounded-md'
+                  >
+                    <Icon
+                      icon={`${
+                        postLiked ? 'ri-thumb-up-fill' : 'ri-thumb-up-line'
+                      }`}
+                      color='text-emerald-600'
+                    />
+                    <p className='px-2 text-emerald-700'>{likes}</p>
+                  </button>
 
-                {/* <Icon
+                  {/* <Icon
                   icon='ri-share-box-fill'
                   color='text-gray-600 text-3xl cursor-pointer'
                 /> */}
-                <Icon
-                  onClick={async () => {
-                    const dta = await savePost(data, user, userF420, router)
-                    if (dta === undefined) {
-                      return
-                    } else {
-                      if (dta.success) {
-                        if (dta.postUnsaved) {
-                          setPostSaved(false)
-                          setNotify(
-                            'Post removido de tus guardados correctamente'
-                          )
-                        } else {
-                          setPostSaved(true)
-                          setNotify('Post guardado correctamente')
+                  <Icon
+                    onClick={async () => {
+                      const dta = await savePost(data, user, userF420, router)
+                      if (dta === undefined) {
+                        return
+                      } else {
+                        if (dta.success) {
+                          if (dta.postUnsaved) {
+                            setPostSaved(false)
+                            setNotify(
+                              'Post removido de tus guardados correctamente'
+                            )
+                          } else {
+                            setPostSaved(true)
+                            setNotify('Post guardado correctamente')
+                          }
                         }
                       }
-                    }
-                  }}
-                  icon={`${
-                    postSaved ? 'ri-bookmark-fill' : 'ri-bookmark-line'
-                  }`}
-                  color='text-gray-600 text-3xl cursor-pointer'
-                />
+                    }}
+                    icon={`${
+                      postSaved ? 'ri-bookmark-fill' : 'ri-bookmark-line'
+                    }`}
+                    color='text-gray-600 text-3xl cursor-pointer'
+                  />
+                </section>
+                <section>
+                  <p className='text-gray-500 text-2xl'>Ultima actualizacion</p>
+                  <p className='text-gray-500 text-2xl'>
+                    {format(new Date(data.updatedAt), 'dd-MMMM-yyyy', {
+                      locale: es,
+                    })}
+                  </p>
+                </section>
               </footer>
             </div>
           </motion.article>
