@@ -183,7 +183,7 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
             ></div>
           </section>
           <hr />
-          <section className='flex flex-col items-center w-full pt-2 mt-14 bg-white'>
+          <section className='flex flex-col w-full pt-2 mt-14 bg-white'>
             <h2 className='text-center font-medium text-3xl mb-5'>
               Comentarios
             </h2>
@@ -218,14 +218,17 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
                 Se el primero en comentar esta publicación
               </p>
             )}
-            {!user?.email && !userF420?._id && (
-              <ButtonPrimary
-                onClick={() => router.push('/login')}
-                text={'INICIA SESIÓN'}
-                bgColor='bg-emerald-600'
-                color='text-gray-50'
-              />
-            )}
+            <div className='w-full flex justify-center items-center mt-10'>
+              {!user?.email && !userF420?._id && (
+                <ButtonPrimary
+                  onClick={() => router.push('/login')}
+                  text={'INICIA SESIÓN'}
+                  bgColor='bg-emerald-600'
+                  color='text-gray-50'
+                  otherStyle={'w-60'}
+                />
+              )}
+            </div>
           </section>
         </main>
       ) : (
