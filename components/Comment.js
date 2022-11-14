@@ -38,15 +38,15 @@ const Comment = ({
   const showResponses = async (showResp) => {
     try {
       if (!showResp) {
+        setLoading(true)
         const res = await fetch(
           `/api/resp?commentId=${commentId}&task=getallresponses`
         )
         const data = await res.json()
         const newLength = data.responses.length
-        setResponsesToShow([])
+        setResponsesToShow(data.responses)
         setResponsesLength(newLength)
-
-        return
+        setLoading(false)
       }
       if (showResp.qty <= showResp.limit) {
         setLoading(true)
@@ -197,7 +197,11 @@ const Comment = ({
                   <div className='w-full flex items-center absolute -bottom-9'>
                     <i className='ri-heart-line mr-2 cursor-pointer'></i>
                     <p
-                      onClick={() => setOpenCreateResp(true)}
+                      onClick={() => {
+                        userF420.id
+                          ? () => setOpenCreateResp(true)
+                          : router.push('/login')
+                      }}
                       className='text-xl mx-2 hover:text-gray-600 hover:font-semibold cursor-pointer'
                     >
                       Responder
@@ -246,12 +250,7 @@ const Comment = ({
             </motion.article>
             {responsesLength > 0 && !responsesPublished.length && (
               <p
-                onClick={() =>
-                  showResponses({
-                    qty: responsesLength,
-                    limit: 10,
-                  })
-                }
+                onClick={() => showResponses()}
                 className='text-center cursor-pointer my-2'
               >
                 Ver {responsesLength <= 50 ? responsesLength : '50+'}{' '}

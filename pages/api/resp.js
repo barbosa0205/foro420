@@ -6,7 +6,9 @@ export default async function handler(req, res) {
     case 'GET':
       try {
         if (query.task === 'getallresponses') {
-          const comment = await CommentSchema.findById(query.commentId)
+          const comment = await CommentSchema.findById(
+            query.commentId
+          ).populate('responses')
           let responses = comment.responses.map(async (respId) => {
             let response = await CommentSchema.findById(respId)
 
@@ -19,7 +21,7 @@ export default async function handler(req, res) {
 
           responses = await Promise.all(responses)
 
-          responses = await Promise.all(responses)
+          console.log(responses)
 
           return res.status(200).json({
             responses,

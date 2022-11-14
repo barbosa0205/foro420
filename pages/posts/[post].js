@@ -21,6 +21,8 @@ import Notification from 'components/Notification'
 import like from 'helpers/likePost'
 import savePost from 'helpers/savePost'
 import ButtonPrimary from 'components/ButtonPrimary'
+import Head from 'next/head'
+
 const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   const router = useRouter()
   const { user, userF420, setUserF420, notify, setNotify } = useUser()
@@ -41,7 +43,6 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
   })
 
   const deletePost = async () => {
-    //TODO: do the delete post logic after come back from smoke weed 🥦
     const resp = await fetch('/api/posts/post?id=' + post._id, {
       method: 'DELETE',
     })
@@ -62,6 +63,10 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
 
   return (
     <>
+      <Head>
+        <title>{post.title}</title>
+      </Head>
+
       {!editPostState ? (
         <main className='w-full md:w-11/12 max-w-screen-xl min-h-screen mx-auto bg-white px-2 pb-10'>
           <header className='coverImage w-full relative flex flex-col justify-center items-start px-2 rounded-lg shadow-sm'>
