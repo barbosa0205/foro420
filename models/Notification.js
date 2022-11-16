@@ -11,6 +11,10 @@ const NotificationSchema = new Schema(
       type: String,
       required: true,
     },
+    post: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    },
     icon: {
       type: String,
     },

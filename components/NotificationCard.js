@@ -4,6 +4,8 @@ import Icon from './Icons/Icon'
 import formatDistance from 'date-fns/formatDistance'
 import { es } from 'date-fns/locale'
 import { MenuPopup } from './MenuPopup'
+import { useRouter } from 'next/router'
+import useUser from 'contexts/useUser'
 
 export const NotificationCard = ({
   notify,
@@ -11,8 +13,9 @@ export const NotificationCard = ({
   setAllNotifications,
   ...rest
 }) => {
+  const router = useRouter()
   const [openMenu, setOpenMenu] = useState(false)
-
+  const { setShowNotificationsSide } = useUser()
   const setNotifyViewed = async () => {
     try {
       const resp = await fetch(
@@ -49,7 +52,12 @@ export const NotificationCard = ({
   return (
     <>
       <li
-        className={`relative w-full shadow-gray-200 shadow-md py-5 px-5 my-1 list-none ${
+        onClick={() => {
+          router.push(`/posts/${notify.post}
+          `)
+          setShowNotificationsSide(false)
+        }}
+        className={`relative w-full shadow-gray-200 shadow-md py-2 px-2 my-1 list-none cursor-pointer ${
           notify.pendientToView && 'bg-cyan-700 bg-opacity-20'
         }`}
         {...rest}
@@ -58,7 +66,10 @@ export const NotificationCard = ({
           <Icon
             icon={'ri-more-2-line cursor-pointer'}
             color='text-gray-800'
-            onClick={() => setOpenMenu(!openMenu)}
+            onClick={(event) => {
+              event.stopPropagation()
+              setOpenMenu(!openMenu)
+            }}
           />
         </div>
         <header className='w-full flex items-center mb-2'>
@@ -75,8 +86,8 @@ export const NotificationCard = ({
           </p>
         </header>
         <main className='w-full flex items-center'>
-          <div className='w-full flex items-center'>
-            <div className='py-1 px-3 ml-2 rounded-lg bg-emerald-500'>
+          <div className=' mt-2 w-full flex items-center'>
+            <div className='py-1 px-2 ml-2 rounded-lg bg-emerald-500'>
               <Icon icon={notify.icon} bgColor={'bg-emerald-600'} />
             </div>
             <p className='px-2 font-semibold text-2xl'>{notify.notification}</p>
@@ -92,7 +103,13 @@ export const NotificationCard = ({
         {/* options Notification */}
         {/* TODO: Create logic  of setNotifyViewed and deleteNotify */}
         {openMenu && (
-          <MenuPopup top='top-6' right={'right-14'}>
+          <MenuPopup
+            onClick={(event) => {
+              event.stopPropagation()
+            }}
+            top='top-6'
+            right={'right-14'}
+          >
             <p
               className='cursor-pointer my-2'
               onClick={() => setNotifyViewed(notify._id)}

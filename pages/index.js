@@ -11,15 +11,13 @@ import CreatePostButton from 'components/CreatePostButton'
 import AlienBagEmpty from 'assets/SVG/alien-bag-empty.svg'
 import { dbConnect } from 'utils/mongoose'
 
-//posts hardcoded for now
-
 function Home({ postsToShow, questionsPosts }) {
   //useSelect hook
   const [postAnswerToggle, setPostAnswerToggle] = useState('APORTES')
 
-  useEffect(() => {
-    console.log(postsToShow)
-  }, [postsToShow])
+  // useEffect(() => {
+  //   console.log(postsToShow)
+  // }, [postsToShow])
   return (
     <>
       <Head>

@@ -43,12 +43,12 @@ const Comment = ({
           `/api/resp?commentId=${commentId}&task=getallresponses`
         )
         const data = await res.json()
+        console.trace(data)
         const newLength = data.responses.length
         setResponsesToShow(data.responses)
         setResponsesLength(newLength)
         setLoading(false)
-      }
-      if (showResp.qty <= showResp.limit) {
+      } else if (showResp.qty <= showResp.limit) {
         setLoading(true)
         const res = await fetch(
           `/api/resp?commentId=${commentId}&task=getallresponses`
@@ -62,6 +62,10 @@ const Comment = ({
     } catch (error) {
       console.log('error mostrar o ocultar respuestas', error)
     }
+  }
+
+  const hideResponses = () => {
+    setResponsesToShow([])
   }
 
   const editAComment = async (comment) => {
@@ -248,7 +252,7 @@ const Comment = ({
                 </div>
               </div>
             </motion.article>
-            {responsesLength > 0 && !responsesPublished.length && (
+            {responsesLength > 0 && !responsesToShow.length ? (
               <p
                 onClick={() => showResponses()}
                 className='text-center cursor-pointer my-2'
@@ -256,6 +260,8 @@ const Comment = ({
                 Ver {responsesLength <= 50 ? responsesLength : '50+'}{' '}
                 {responsesLength === 1 ? 'respuesta' : 'respuestas'}
               </p>
+            ) : (
+              ''
             )}
             {responsesPublished ? (
               responsesPublished.map((response) => (
@@ -311,7 +317,7 @@ const Comment = ({
             )}
             {responsesToShow.length ? (
               <p
-                onClick={() => showResponses(undefined)}
+                onClick={() => hideResponses()}
                 className='text-center cursor-pointer my-2'
               >
                 Ocultar {responsesLength === 1 ? 'respuesta' : 'respuestas'}

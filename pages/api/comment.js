@@ -119,6 +119,12 @@ export default async function handler(req, res) {
 
           thisIsNewComments = await Promise.all(thisIsNewComments)
 
+          //filtrar los que son respuesta
+
+          thisIsNewComments = thisIsNewComments.filter(
+            (c) => c.commentType !== 'response'
+          )
+
           console.log('this is new comments', thisIsNewComments)
 
           res.status(200).json({
@@ -127,8 +133,6 @@ export default async function handler(req, res) {
             newComments: thisIsNewComments,
           })
         } else {
-          console.log('222222')
-
           const respDeleted = await CommentSchema.deleteOne({
             _id: body.id,
           })

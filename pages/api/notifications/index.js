@@ -70,6 +70,7 @@ export default async function handler(req, res) {
           })
           const notification = new NotificationSchema({
             from: query.emisor,
+            post: post._id,
             notification: 'Comento tu publicación',
             icon: notificationIcons.comment,
           })
