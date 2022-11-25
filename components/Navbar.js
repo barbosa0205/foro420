@@ -86,7 +86,7 @@ const Navbar = () => {
         <div className='w-fit h-full flex items-center'>
           {!userF420?._id ? (
             <h3
-              className='hidden md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
+              className=' md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
               onClick={() => {
                 router.push('/login')
               }}

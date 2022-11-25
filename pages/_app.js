@@ -6,17 +6,20 @@ import 'tailwindcss/tailwind.css'
 import 'styles/globals.css'
 import SocketProvider from 'contexts/socket/SocketProvider'
 import MessageProvider from 'contexts/messages/MessageProvider'
+import PostProvider from 'contexts/posts/PostProvider'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
       <UserProvider>
         <SocketProvider>
-          <MessageProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </MessageProvider>
+          <PostProvider>
+            <MessageProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </MessageProvider>
+          </PostProvider>
         </SocketProvider>
       </UserProvider>
     </SessionProvider>

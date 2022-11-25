@@ -233,7 +233,7 @@ const Comment = ({
                             >
                               Editar
                             </p>
-                            <hr />
+
                             <p
                               onClick={() => {
                                 setOpenDeleteQuestion(true)

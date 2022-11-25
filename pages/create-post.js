@@ -171,15 +171,25 @@ const CreatePost = ({ categories, types }) => {
           />
         )}
       </section>
-      <div className='w-full flex flex-wrap max-w-7xl mt-10 '>
+      <div className='relative w-full flex flex-wrap max-w-7xl mt-10 '>
+        {typeSelect.name === 'preguntas' && (
+          <p className='text-6xl absolute -top-2 font-semibold left-2 text-zinc-700 '>
+            ¿
+          </p>
+        )}
         <textarea
           type={'text'}
           placeholder='TU TITULO AQUI 👽'
-          className='w-11/12 mx-auto text-5xl outline-none mb-3 pl-5 resize-none'
+          className='placeholder:text-zinc-700 font-semibold  w-11/12 mx-auto text-5xl outline-none mb-3 pl-5 resize-none'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           autoFocus
-        />
+        />{' '}
+        {typeSelect.name === 'preguntas' && (
+          <p className='text-6xl absolute -top-2 font-semibold right-2 text-zinc-700 '>
+            ?
+          </p>
+        )}
         {errors.length > 0 &&
           errors.map((error, index) => (
             <p
@@ -203,7 +213,7 @@ const CreatePost = ({ categories, types }) => {
             mobile: {
               resize: true,
             },
-            height: '60rem',
+            height: '40rem',
             width: '100%',
             selector: '#editor',
             menubar: false,
@@ -234,11 +244,13 @@ const CreatePost = ({ categories, types }) => {
           ))}
       </div>
       <section className='w-full flex flex-col items-center md:flex-row md:justify-evenly md:mt-10'>
-        <div className='w-fit flex justify-between items-center my-5'>
-          <p className='text-green-600 text-4xl md:text-5xl'>Categorias: </p>
+        <div className='w-fit flex justify-between shadow-sm items-center my-5 px-3 rounded-2xl bg-zinc-100'>
+          <p className=' p-3 rounded-l-2xl bg-emerald-500 text-zinc-50 md:text-3xl'>
+            Categorias{' '}
+          </p>
           <Listbox
             handleChange={categoryChange}
-            otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
+            otherStyles='bg-gray-100 border-r-2 p-3 text-3xl '
           >
             {categories &&
               categories.map((category) => (
@@ -250,7 +262,7 @@ const CreatePost = ({ categories, types }) => {
             <>
               <Listbox
                 handleChange={subChange}
-                otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
+                otherStyles='bg-gray-100 mx-2 p-2 text-3xl '
               >
                 {subcategories.map((sub, index) => (
                   <ListItem key={index} text={sub.name} />
@@ -259,20 +271,32 @@ const CreatePost = ({ categories, types }) => {
             </>
           )}
         </div>
-        <div className='w-fit flex justify-between items-center my-5'>
-          <p className='text-green-600 text-4xl md:text-5xl'>Tipo: </p>
+        <div className='w-fit flex justify-between items-center my-5 bg-zinc-100 rounded-2xl'>
+          <p className=' p-3 rounded-l-2xl bg-emerald-500 text-zinc-50 md:text-3xl'>
+            Tipo{' '}
+          </p>
           <Listbox
-            handleChange={typeChange}
+            handleChange={(evnt) => {
+              typeChange(evnt)
+            }}
             otherStyles='bg-gray-100 mx-2 p-2 text-3xl md:text-4xl'
           >
             {types &&
-              types.map((type) => <ListItem key={type._id} text={type.name} />)}
+              types.map((type) => (
+                <ListItem
+                  onClick={() => {
+                    window.scrollTo(0, 0)
+                  }}
+                  key={type._id}
+                  text={type.name}
+                />
+              ))}
           </Listbox>
         </div>
       </section>
       <ButtonPrimary
         text={'PUBLICAR POST'}
-        bgColor='bg-green-600'
+        bgColor='bg-emerald-500'
         color='text-gray-50'
         otherStyle={'my-10'}
         onClick={uploadPost}

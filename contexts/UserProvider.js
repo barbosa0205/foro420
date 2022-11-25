@@ -38,14 +38,17 @@ const UserProvider = ({ children }) => {
         if (data.success) {
           if (localStorage.getItem('foro420-session-expires_at')) {
             if (
-              localStorage.getItem('foro420-session-expires_at') <
-              String(new Date())
+              new Date(localStorage.getItem('foro420-session-expires_at')) <
+              new Date()
             ) {
               localStorage.removeItem('foro420-session-expires_at')
               signOut()
             }
           } else {
-            localStorage.setItem('foro420-session-expires_at', data.expires_at)
+            localStorage.setItem(
+              'foro420-session-expires_at',
+              addDays(new Date(), 2)
+            )
           }
         }
       }
@@ -80,6 +83,12 @@ const UserProvider = ({ children }) => {
       setUserSignInfo({})
       router.replace('/login')
     }
+  }
+
+  const addDays = (date, days) => {
+    const res = new Date(date)
+    res.setDate(res.getDate() + days)
+    return res
   }
 
   useEffect(() => {

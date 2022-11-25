@@ -134,9 +134,9 @@ const Post = ({ data }) => {
                       icon={`${
                         postLiked ? 'ri-thumb-up-fill' : 'ri-thumb-up-line'
                       }`}
-                      color='text-emerald-600'
+                      color='text-emerald-500'
                     />
-                    <p className='px-2 text-emerald-700'>{likes}</p>
+                    <p className='px-2 text-emerald-600'>{likes}</p>
                   </button>
 
                   {/* <Icon
@@ -165,7 +165,9 @@ const Post = ({ data }) => {
                     icon={`${
                       postSaved ? 'ri-bookmark-fill' : 'ri-bookmark-line'
                     }`}
-                    color='text-gray-600 text-3xl cursor-pointer'
+                    color={`${
+                      postSaved ? 'text-emerald-500' : 'text-zinc-600'
+                    } text-3xl cursor-pointer`}
                   />
                 </section>
                 <section>

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const ListItem = ({ text, ...rest }) => {
+const ListItem = ({ text, otherStyles, ...rest }) => {
   return (
-    <option className='bg-gray-50 text-gray-800' {...rest}>
+    <option on className={`text-gray-800 ${otherStyles}`} {...rest}>
       {text}
     </option>
   )
