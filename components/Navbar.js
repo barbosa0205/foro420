@@ -30,9 +30,37 @@ const Navbar = () => {
   const router = useRouter()
 
   const { height, width } = useWindowDimensions()
-
+  const [showNavbar, setShowNavbar] = React.useState(true)
   const [showSide, setShowSide] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+
+  const [lastScrollY, setLastScrollY] = React.useState(0)
+
+  const controlNavbar = () => {
+    if (typeof window !== 'undefined') {
+      if (window.scrollY > lastScrollY) {
+        // if scroll down hide the navbar
+        setShowNavbar(false)
+      } else {
+        // if scroll up show the navbar
+        setShowNavbar(true)
+      }
+
+      // remember current page location to use in the next move
+      setLastScrollY(window.scrollY)
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar)
+
+      // cleanup function
+      return () => {
+        window.removeEventListener('scroll', controlNavbar)
+      }
+    }
+  }, [lastScrollY])
 
   useEffect(() => {
     if (newNotificationAlert) {
@@ -45,81 +73,101 @@ const Navbar = () => {
   return (
     <>
       {/* NAVBAR */}
-      <nav
-        className={`flex relative min-h-fit ${
-          width <= 290 ? 'flex-col' : 'items-center justify-between'
-        } lg:justify-around px-5  w-full py-2 sm:h-32 bg-gradient-to-tl from-emerald-600 to-emerald-500`}
-      >
-        {/* Logo */}
+      <AnimatePresence>
+        {showNavbar && (
+          <motion.nav
+            initial={{
+              y: -100,
+            }}
+            animate={{
+              y: 0,
+              opacity: 1,
+            }}
+            transition={{
+              duration: 0.4,
+              type: 'just',
+            }}
+            exit={{
+              y: -100,
+              opacity: 0,
+            }}
+            className={`flex fixed z-30 min-h-fit ${
+              width <= 290 ? 'flex-col' : 'items-center justify-between'
+            } lg:justify-around px-5  w-full py-2 sm:h-32 bg-gradient-to-tl from-emerald-400 to-emerald-500`}
+          >
+            {/* Logo */}
 
-        <div className='flex items-center justify-evenly w-fit'>
-          <Icon
-            icon='ri-menu-fill cursor-pointer md:hidden'
-            onClick={() => setShowSide(true)}
-          />
-
-          <Link href='/'>
-            {/* TODO:Replace with logo-movil and logo-desk */}
-            <a className='text-gray-100 pl-4 font-mono font-thin text-4xl sm:text-5xl cursor-pointer'>
-              {width < 400 ? (
-                <h2
-                  onClick={() => router.push('/')}
-                  className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
-                >
-                  F<span className='mx-1'>420</span>
-                </h2>
-              ) : (
-                <h2
-                  onClick={() => router.push('/')}
-                  className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
-                >
-                  FORO
-                  <span className='mx-4'>420</span>
-                </h2>
-              )}
-            </a>
-          </Link>
-        </div>
-        <div className='w-fit h-full flex items-center justify-evenly'>
-          {/* <Search /> */}
-        </div>
-        <div className='w-fit h-full flex items-center'>
-          {!userF420?._id ? (
-            <h3
-              className=' md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
-              onClick={() => {
-                router.push('/login')
-              }}
-            >
-              Iniciar sesión
-            </h3>
-          ) : (
-            <section
-              className='relative px-3 mx-2 mr-7 hidden md:flex cursor-pointer'
-              onClick={() => {
-                setShowSide(!showSide)
-              }}
-            >
-              <Image
-                className='rounded-full'
-                src={userF420?.image || userImageDefault}
-                alt='user'
-                width={55}
-                height={55}
-                objectFit={'cover'}
+            <div className='flex items-center justify-evenly w-fit'>
+              <Icon
+                icon='ri-menu-fill cursor-pointer md:hidden'
+                onClick={() => setShowSide(true)}
               />
-              <Icon icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'} />
-            </section>
-          )}
-          {userF420?._id && (
-            <>
-              <Message styles={'mr-5'} />
-              <Notify styles={'mr-5'} />
-            </>
-          )}
-        </div>
-      </nav>
 
+              <Link href='/'>
+                {/* TODO:Replace with logo-movil and logo-desk */}
+                <a className='text-gray-100 pl-4 font-mono font-thin text-4xl sm:text-5xl cursor-pointer'>
+                  {width < 400 ? (
+                    <h2
+                      onClick={() => router.push('/')}
+                      className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
+                    >
+                      F<span className='mx-1'>420</span>
+                    </h2>
+                  ) : (
+                    <h2
+                      onClick={() => router.push('/')}
+                      className='font-bold mt- mx-1 text-6xl sm:text-7xl cursor-pointer font-Type2 text-gray-200'
+                    >
+                      FORO
+                      <span className='mx-4'>420</span>
+                    </h2>
+                  )}
+                </a>
+              </Link>
+            </div>
+            <div className='w-fit h-full flex items-center justify-evenly'>
+              {/* <Search /> */}
+            </div>
+            <div className='w-fit h-full flex items-center'>
+              {!userF420?._id ? (
+                <h3
+                  className=' md:flex md:items-center md:justify-center text-gray-50 text-semibold text-3xl cursor-pointer'
+                  onClick={() => {
+                    router.push('/login')
+                  }}
+                >
+                  Iniciar sesión
+                </h3>
+              ) : (
+                <section
+                  className='relative px-3 mx-2 mr-7 hidden md:flex cursor-pointer'
+                  onClick={() => {
+                    setShowSide(!showSide)
+                  }}
+                >
+                  <Image
+                    className='rounded-full'
+                    src={userF420?.image || userImageDefault}
+                    alt='user'
+                    width={55}
+                    height={55}
+                    objectFit={'cover'}
+                  />
+                  <Icon
+                    icon={'absolute -right-5 top-1 ri-arrow-drop-down-line'}
+                  />
+                </section>
+              )}
+              {userF420?._id && (
+                <>
+                  <Message styles={'mr-5'} />
+                  <Notify styles={'mr-5'} />
+                </>
+              )}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
       {/* MENU */}
       <AnimatePresence>
         {showSide && (
