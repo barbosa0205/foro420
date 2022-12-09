@@ -51,8 +51,8 @@ const Post = ({ data }) => {
 
   return (
     <>
-      {data._id && (
-        <AnimatePresence>
+      <AnimatePresence>
+        {data._id && (
           <motion.article
             initial={{
               opacity: 0,
@@ -181,8 +181,8 @@ const Post = ({ data }) => {
               </footer>
             </div>
           </motion.article>
-        </AnimatePresence>
-      )}
+        )}
+      </AnimatePresence>
       <hr />
 
       {notify && <Notification text={notify} />}

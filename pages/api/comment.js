@@ -71,7 +71,27 @@ export default async function handler(req, res) {
       break
     case 'DELETE':
       try {
-        if (body.responses) {
+        if (body.type === 'feedComment') {
+          console.log(body.id, 'bodyId')
+          const commentDeleted = await CommentSchema.deleteOne({
+            _id: body.id,
+          })
+          console.log(commentDeleted, 'commentDeleted')
+          const newComments = await CommentSchema.find({
+            commentType: {
+              $eq: body.type,
+            },
+          })
+            .populate(['postedBy'])
+            .sort({
+              updatedAt: -1,
+            })
+          res.status(200).json({
+            success: true,
+            message: 'Comentario eliminado correctamente',
+            newComments,
+          })
+        } else if (body.responses) {
           const comment = await CommentSchema.findOne({
             _id: body.id,
           })

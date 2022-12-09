@@ -10,14 +10,15 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.6.0",
+    "@cloudinary/url-gen": "^1.8.6",
     "@headlessui/react": "1.6.1",
     "@next-auth/mongodb-adapter": "1.0.3",
     "@supabase/supabase-js": "^1.35.6",
     "axios": "^0.27.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "base64-arraybuffer": "^1.0.2",
-    "cloudinary": "^1.30.1",
-    "cloudinary-react": "^1.8.1",
+    "cloudinary": "^1.32.0",
     "cookie": "0.5.0",
     "cors": "2.8.5",
     "date-fns": "^2.29.1",
@@ -27,7 +28,7 @@
     "mongodb": "4.5.0",
     "mongoose": "6.3.2",
     "mongoose-beautiful-unique-validation": "7.1.1",
-    "next": "^12.1.6",
+    "next": "^12.3.4",
     "next-auth": "4.3.4",
     "nookies": "2.5.2",
     "pm2": "^5.2.0",
@@ -42,7 +43,6 @@
     "use-sse": "^2.0.1"
   },
   "devDependencies": {
-    "jest-environment-jsdom": "^29.0.3",
     "@svgr/webpack": "^6.2.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -55,6 +55,7 @@
     "eslint-plugin-testing-library": "^5.7.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.0.3",
+    "jest-environment-jsdom": "^29.0.3",
     "postcss": "^8.4.12",
     "sass": "1.51.0",
     "tailwindcss": "3.0.24"

@@ -11,7 +11,7 @@ const ButtonBorder = ({
   return (
     <>
       <button
-        className={`flex items-center justify-center px-5 py-1 ml-3 mr-5 rounded-md font-mono font-bold border-2 ${borderColor} ${colorText} shadow-md shadow-gray-200 ${otherStyles}`}
+        className={`flex items-center justify-center px-5 py-1 my-1 ml-3 mr-5 rounded-md font-mono font-bold border-2 ${borderColor} ${colorText} shadow-md shadow-gray-200 ${otherStyles}`}
         {...rest}
       >
         {text}

@@ -3,7 +3,7 @@ import { sendNotification } from 'helpers/notifications'
 import Image from 'next/image'
 import React from 'react'
 
-const CreateComment = ({ user, postId, setComments, comments }) => {
+const CreateComment = ({ user, postId, setComments, comments = [], type }) => {
   const { socket } = useSocket()
   const [comment, setComment] = React.useState('')
 
@@ -21,15 +21,23 @@ const CreateComment = ({ user, postId, setComments, comments }) => {
           postId,
           content: comment,
           postedBy: user._id,
-          type: 'comment',
+          type,
         }),
       })
       if (resp.status === 200) {
         const data = await resp.json()
-        const newComments = [data, ...comments]
+        if (comments.length > 0) {
+          const newComments = [data, ...comments]
+          if (comments.length) {
+            setComments([...newComments])
+            setComment('')
+          }
+        } else {
+          console.log('no hay comentarios antes', data)
 
-        setComments([...newComments])
-        setComment('')
+          setComments([data])
+          setComment('')
+        }
 
         //sending notification
 
@@ -55,7 +63,12 @@ const CreateComment = ({ user, postId, setComments, comments }) => {
     <>
       <hr />
       <div className='flex items-center w-full py-2 px-5 flex-wrap'>
-        <div className='flex items-center w-full'>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+          }}
+          className='flex items-center w-full'
+        >
           <Image
             src={user.image}
             alt='user'
@@ -65,22 +78,18 @@ const CreateComment = ({ user, postId, setComments, comments }) => {
             objectFit={'cover'}
           />
           <textarea
-            className='w-full ml-2 outline-none p-1 text-2xl resize-none'
+            onKeyUp={({ key }) => {
+              if (key === 'Enter') {
+                publishComment()
+              }
+            }}
+            className='w-full h-fit ml-2 outline-none px-5 text-xl resize-none bg-zinc-100 rounded-full'
             placeholder='Escribe un comentario público...'
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
-        </div>
-        <div className='w-full flex justify-end p-5'>
-          <button
-            onClick={publishComment}
-            className='p-2 rounded-md text-gray-50 bg-emerald-600'
-          >
-            Comentar
-          </button>
-        </div>
+        </form>
       </div>
-      <hr />
     </>
   )
 }

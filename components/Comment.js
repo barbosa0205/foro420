@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Alert } from './Alert'
 import { useRouter } from 'next/router'
 import loadingImage from 'assets/loader.gif'
+import { useEffect } from 'react'
+
 const Comment = ({
   postId,
   userImage,
@@ -21,6 +23,7 @@ const Comment = ({
   comments,
   setComments,
   userId,
+  commentType,
 }) => {
   const router = useRouter()
   const { userF420, setNotify } = useUser()
@@ -99,6 +102,7 @@ const Comment = ({
         postId,
         id: commentId,
         responses,
+        type: commentType,
       }),
     })
     const data = await resp.json()
@@ -122,6 +126,10 @@ const Comment = ({
   const goProfile = (username, uid) => {
     router.push(`/profile/${username}?id=${uid}`)
   }
+
+  useEffect(() => {
+    console.log(commentType)
+  }, [])
 
   return (
     <>

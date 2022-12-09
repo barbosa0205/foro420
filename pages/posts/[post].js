@@ -198,6 +198,7 @@ const PostPage = ({ post, postLiked: likedPost, postSaved: savedPost }) => {
                 postId={post._id}
                 comments={comments}
                 setComments={setComments}
+                type='comment'
               />
             ) : (
               <p></p>

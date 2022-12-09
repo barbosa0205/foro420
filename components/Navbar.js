@@ -31,6 +31,7 @@ const Navbar = () => {
 
   const { height, width } = useWindowDimensions()
   const [showNavbar, setShowNavbar] = React.useState(true)
+  const [position, setPosition] = React.useState('fixed')
   const [showSide, setShowSide] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
@@ -38,6 +39,11 @@ const Navbar = () => {
 
   const controlNavbar = () => {
     if (typeof window !== 'undefined') {
+      if (window.scrollY <= 5) {
+        setPosition('relative')
+      } else {
+        setPosition('fixed')
+      }
       if (window.scrollY > lastScrollY) {
         // if scroll down hide the navbar
         setShowNavbar(false)
@@ -84,14 +90,14 @@ const Navbar = () => {
               opacity: 1,
             }}
             transition={{
-              duration: 0.4,
+              duration: 0.2,
               type: 'just',
             }}
             exit={{
               y: -100,
               opacity: 0,
             }}
-            className={`flex fixed z-30 min-h-fit ${
+            className={`flex ${position} z-30 min-h-fit ${
               width <= 290 ? 'flex-col' : 'items-center justify-between'
             } lg:justify-around px-5  w-full py-2 sm:h-32 bg-gradient-to-tl from-emerald-400 to-emerald-500`}
           >
@@ -100,7 +106,7 @@ const Navbar = () => {
             <div className='flex items-center justify-evenly w-fit'>
               <Icon
                 icon='ri-menu-fill cursor-pointer md:hidden'
-                onClick={() => setShowSide(true)}
+                onClick={() => setShowSide(!showSide)}
               />
 
               <Link href='/'>
@@ -190,14 +196,16 @@ const Navbar = () => {
               y: width >= 768 ? '-10' : '0',
               opacity: 0,
             }}
-            className=' w-full h-screen fixed top-0 z-20'
+            className={`w-full h-screen fixed ${
+              showNavbar ? 'top-28' : 'top-0'
+            } z-20`}
             onClick={() => setShowSide(false)}
           >
             <aside
               onClick={(e) => e.stopPropagation()}
               className={`w-1/2 min-w-fit max-w-md h-screen bg-white ${
                 showSide ? ' visible' : 'hidden'
-              } md:absolute md:h-fit md:right-7 md:top-32 md:w-fit lg:right-24 xl:right-36 2xl:right-96`}
+              } md:absolute md:h-fit md:right-7 md:top-0 md:w-fit lg:right-24 xl:right-36 2xl:right-96`}
             >
               {/* user info */}
               <section>

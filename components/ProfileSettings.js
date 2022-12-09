@@ -11,6 +11,7 @@ import Notification from './Notification'
 import axios from 'axios'
 import loadingImg from 'assets/loader.gif'
 import { uploadImageToCloudinary } from 'helpers/cloudinary/uploadImageToCloudinary'
+import { verify } from 'jsonwebtoken'
 const ProfileSettings = () => {
   const { userF420, setUserF420, notify, setNotify } = useUser()
   const [profileValues, handleChange, validateErrorSubmit, errors] = UseForm(
@@ -32,6 +33,7 @@ const ProfileSettings = () => {
         preview: URL.createObjectURL(file),
       })
     })
+    console.log(imageUrl)
     setImageDropped(imageUrl.preview)
     setImageFile(imageUrl)
   }, [])
@@ -69,7 +71,8 @@ const ProfileSettings = () => {
 
       const cloudinaryImageUrl = await uploadImageToCloudinary(
         formData,
-        userF420._id
+        userF420._id,
+        true
       )
 
       const resp = await fetch(
@@ -80,7 +83,6 @@ const ProfileSettings = () => {
           body: JSON.stringify({
             image: cloudinaryImageUrl,
             fullname: profileValues.fullname,
-            // email: profileValues.email,
             username: profileValues.username,
           }),
         }
@@ -97,7 +99,6 @@ const ProfileSettings = () => {
           ...userF420,
           image: data.data.image || userF420.image,
           fullname: data.data.fullname,
-          // email: data.data.email,
           username: data.data.username,
         })
         setNotify(data.message)
@@ -108,8 +109,6 @@ const ProfileSettings = () => {
       setLoading(false)
     }
   }
-
-  useEffect(() => {}, [imageDropped])
 
   useEffect(() => {
     if (userF420.id) {
@@ -145,7 +144,7 @@ const ProfileSettings = () => {
                 height={80}
                 objectFit={'cover'}
               />
-              <p className='text-2xl font-bold text-emerald-600'>
+              <p className='text-2xl font-bold text-emerald-500'>
                 Cambiar imagen
               </p>
               <input {...getInputProps()} />

@@ -1,7 +1,7 @@
 import App from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import UserProvider from 'contexts/UserProvider'
-import Layout from 'components/Layout'
+import Layout from 'components/layouts/Layout'
 import 'tailwindcss/tailwind.css'
 import 'styles/globals.css'
 import SocketProvider from 'contexts/socket/SocketProvider'

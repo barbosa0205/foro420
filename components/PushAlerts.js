@@ -16,7 +16,6 @@ const PushAlerts = () => {
 
   const getSocket = async (socketId) => {
     const socket = await saveSocket(socketId, userF420._id)
-    console.log('socket', socket)
   }
 
   useEffect(() => {
