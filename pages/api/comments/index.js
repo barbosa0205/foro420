@@ -6,8 +6,8 @@ export default async function handelr(req, res) {
     case 'GET':
       try {
         const comments = await CommentSchema.find({
-          postedBy: {
-            $eq: query.id,
+          post: {
+            $eq: query.postId,
           },
           commentType: {
             $eq: 'feedComment',

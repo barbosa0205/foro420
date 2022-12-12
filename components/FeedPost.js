@@ -16,7 +16,7 @@ import { FeedComments } from './FeedComments'
 
 const FeedPost = memo(({ postData }) => {
   const { userF420, setNotify } = useUser()
-  const { feedPosts, setFeedPosts, feedComments, setFeedComments } = usePost()
+  const { feedPosts, setFeedPosts } = usePost()
   const [editData, handleEditFetch] = useFetch('')
   const [deleteData, loadingDelete, handleDeleteFetch] = useFetch(
     'api/feedPosts/feedPost',
@@ -29,6 +29,8 @@ const FeedPost = memo(({ postData }) => {
   )
 
   const { openMenu, toggleMenu } = useMenu()
+
+  const [feedComments, setFeedComments] = useState([])
 
   const editPost = async () => {
     try {
@@ -64,7 +66,7 @@ const FeedPost = memo(({ postData }) => {
         ''
       )}
       <div className='my-6'>
-        <article className='container bg-white rounded-xl pt-2 shadow-sm'>
+        <article className='container bg-white rounded-xl pt-2 shadow-sm mx-auto'>
           {/* header */}
           <header className='flex items-center justify-betweenp-3 border-b border-zinc-100'>
             {/* user section */}

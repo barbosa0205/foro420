@@ -1,4 +1,5 @@
 import FeedPostSchema from 'models/FeedPost'
+import CommentSchema from 'models/Comment'
 import cloudinary from 'cloudinary'
 const handler = async (req, res) => {
   const { method, query, body } = req
@@ -28,6 +29,32 @@ const handler = async (req, res) => {
             )
           })
         }
+
+        // si hay comentarios tambien borrarlos
+
+        const feedPost = await FeedPostSchema.findOne({
+          _id: data._id,
+        })
+
+        let comments = feedPost.comments
+        console.log('comments', comments)
+        comments.forEach(async (comment) => {
+          let commentContent = await CommentSchema.findOne({
+            _id: comment,
+          })
+
+          if (commentContent.responses.length) {
+            commentContent.responses.forEach(async (response) => {
+              await CommentSchema.deleteOne({
+                _id: response,
+              })
+            })
+          }
+          const commentDeleted = await CommentSchema.deleteOne({
+            _id: commentContent._id,
+          })
+          console.log('commentDeleted', commentDeleted)
+        })
 
         // borrar feedPost
 

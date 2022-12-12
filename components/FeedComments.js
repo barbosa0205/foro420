@@ -10,7 +10,9 @@ export const FeedComments = ({
 }) => {
   const getComments = async ({ qty }) => {
     try {
-      const resp = await fetch(`/api/comments?qty=${qty}&id=${postedById}`)
+      const resp = await fetch(
+        `/api/comments?qty=${qty}&postedById=${postedById}&postId=${postId}`
+      )
       const data = await resp.json()
       console.log(
         'comments',

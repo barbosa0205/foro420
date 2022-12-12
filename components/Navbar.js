@@ -31,7 +31,7 @@ const Navbar = () => {
 
   const { height, width } = useWindowDimensions()
   const [showNavbar, setShowNavbar] = React.useState(true)
-  const [position, setPosition] = React.useState('fixed')
+
   const [showSide, setShowSide] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
@@ -39,18 +39,18 @@ const Navbar = () => {
 
   const controlNavbar = () => {
     if (typeof window !== 'undefined') {
-      if (window.scrollY <= 5) {
-        setPosition('relative')
-      } else {
-        setPosition('fixed')
-      }
-      if (window.scrollY > lastScrollY) {
-        // if scroll down hide the navbar
-        setShowNavbar(false)
-      } else {
-        // if scroll up show the navbar
-        setShowNavbar(true)
-      }
+      // if (window.scrollY <= 5) {
+      //   setPosition('relative')
+      // } else {
+      //   setPosition('fixed')
+      // }
+      // if (window.scrollY > lastScrollY) {
+      //   // if scroll down hide the navbar
+      //   setShowNavbar(false)
+      // } else {
+      //   // if scroll up show the navbar
+      //   setShowNavbar(true)
+      // }
 
       // remember current page location to use in the next move
       setLastScrollY(window.scrollY)
@@ -97,7 +97,7 @@ const Navbar = () => {
               y: -100,
               opacity: 0,
             }}
-            className={`flex ${position} z-30 min-h-fit ${
+            className={`flex z-30 min-h-fit ${
               width <= 290 ? 'flex-col' : 'items-center justify-between'
             } lg:justify-around px-5  w-full py-2 sm:h-32 bg-gradient-to-tl from-emerald-400 to-emerald-500`}
           >

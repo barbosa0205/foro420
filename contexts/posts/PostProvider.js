@@ -6,7 +6,7 @@ const PostProvider = ({ children }) => {
   const [openCreatePost, setOpenCreatePost] = useState(false)
   const [loading, setLoading] = useState(false)
   const [feedPosts, setFeedPosts] = useState([])
-  const [feedComments, setFeedComments] = useState([])
+
   const value = {
     openCreatePost,
     setOpenCreatePost,
@@ -14,8 +14,6 @@ const PostProvider = ({ children }) => {
     setLoading,
     feedPosts,
     setFeedPosts,
-    feedComments,
-    setFeedComments,
   }
 
   return <postContext.Provider value={value}>{children}</postContext.Provider>

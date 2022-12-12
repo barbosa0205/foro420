@@ -1,4 +1,5 @@
 import CommentSchema from 'models/Comment'
+import FeedPostSchema from 'models/FeedPost'
 import PostSchema from 'models/Post'
 import UserSchema from 'models/F420User'
 import mongoose, { mongo } from 'mongoose'
@@ -15,14 +16,25 @@ export default async function handler(req, res) {
           commentType: body.type,
         })
 
-        const saveCommentInPost = await PostSchema.findByIdAndUpdate(
-          body.postId,
-          {
-            $push: {
-              comments: comment._id,
-            },
-          }
-        )
+        if (body.type === 'feedComment') {
+          const saveCommentInPost = await FeedPostSchema.findByIdAndUpdate(
+            body.postId,
+            {
+              $push: {
+                comments: comment._id,
+              },
+            }
+          )
+        } else {
+          const saveCommentInPost = await PostSchema.findByIdAndUpdate(
+            body.postId,
+            {
+              $push: {
+                comments: comment._id,
+              },
+            }
+          )
+        }
 
         comment.postedBy = await UserSchema.findById(comment.postedBy)
 
