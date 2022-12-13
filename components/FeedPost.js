@@ -15,6 +15,8 @@ import Notification from './Notification'
 import { FeedComments } from './FeedComments'
 import like from 'helpers/likeFeedPost'
 import { useRouter } from 'next/router'
+import Modal from './Modal'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 const FeedPost = memo(({ postData }) => {
   const router = useRouter()
 
@@ -35,7 +37,7 @@ const FeedPost = memo(({ postData }) => {
   const [postLiked, setPostLiked] = React.useState(false)
   const [likes, setLikes] = React.useState(postData.likes)
   const [feedComments, setFeedComments] = useState([])
-
+  const [openShare, setOpenShare] = useState(false)
   const editPost = async () => {
     try {
     } catch (error) {}
@@ -233,7 +235,10 @@ const FeedPost = memo(({ postData }) => {
               </button>
 
               {/* button share */}
-              <button className='w-36 sm:w-72 py-2 my-2 rounded-xl hover:bg-zinc-200 flex items-center justify-center'>
+              <button
+                onClick={() => setOpenShare(!openShare)}
+                className='w-36 sm:w-72 py-2 my-2 rounded-xl hover:bg-zinc-200 flex items-center justify-center'
+              >
                 <i className='ri-share-box-line text-3xl text-slate-700'></i>
               </button>
             </section>
@@ -261,6 +266,25 @@ const FeedPost = memo(({ postData }) => {
           </footer>
         </article>
       </div>
+      {openShare && (
+        <Modal>
+          <div className='container flex flex-col items-center justify-center w-11/12 mx-3 py-5 rounded-md bg-slate-50'>
+            <h1 className='text-3xl text-center'>
+              Comparte este post on tus amigos 🎉
+            </h1>
+            <div className='w-11/12 mx-auto bg-slate-200 px-2 my-2 rounded-md'>
+              <p className='text-xl font-semibold flex text-center'>{`https://foro520-ten.vercel.app/feedPosts/${postData._id}`}</p>
+            </div>
+            <CopyToClipboard
+              text={`https://foro520-ten.vercel.app/feedPosts/${postData._id}`}
+            >
+              <button className='px-3 rounded-md bg-emerald-400 text-emerald-800 text-3xl mt-5'>
+                copiar
+              </button>
+            </CopyToClipboard>
+          </div>
+        </Modal>
+      )}
     </>
   )
 })
