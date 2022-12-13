@@ -55,6 +55,12 @@ const User = new Schema(
         ref: 'Post',
       },
     ],
+    feedPostsLiked: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'FeedPost',
+      },
+    ],
     cloudinary: {
       type: String,
     },

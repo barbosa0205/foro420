@@ -13,9 +13,12 @@ import { useEffect } from 'react'
 import usePost from 'contexts/posts/usePost'
 import Notification from './Notification'
 import { FeedComments } from './FeedComments'
-
+import like from 'helpers/likeFeedPost'
+import { useRouter } from 'next/router'
 const FeedPost = memo(({ postData }) => {
-  const { userF420, setNotify } = useUser()
+  const router = useRouter()
+
+  const { userF420, user, setNotify } = useUser()
   const { feedPosts, setFeedPosts } = usePost()
   const [editData, handleEditFetch] = useFetch('')
   const [deleteData, loadingDelete, handleDeleteFetch] = useFetch(
@@ -29,7 +32,8 @@ const FeedPost = memo(({ postData }) => {
   )
 
   const { openMenu, toggleMenu } = useMenu()
-
+  const [postLiked, setPostLiked] = React.useState(false)
+  const [likes, setLikes] = React.useState(postData.likes)
   const [feedComments, setFeedComments] = useState([])
 
   const editPost = async () => {
@@ -200,10 +204,23 @@ const FeedPost = memo(({ postData }) => {
             {/* buttons section (like, comment, share) */}
             <section className='flex items-center justify-around mx-5'>
               {/* button like */}
-              <button className='w-36 sm:w-72 py-2 my-2 rounded-xl  hover:bg-zinc-200 flex items-center justify-center'>
+              <button
+                onClick={() =>
+                  like(
+                    postData,
+                    user,
+                    userF420,
+                    setLikes,
+                    setPostLiked,
+                    router,
+                    likes
+                  )
+                }
+                className='w-36 sm:w-72 py-2 my-2 rounded-xl  hover:bg-zinc-200 flex items-center justify-center'
+              >
                 <i className='ri-heart-line text-3xl text-slate-700'></i>
                 <small className='text-2xl mb-[.5px] mx-1 text-slate-700'>
-                  {postData.likes}
+                  {likes}
                 </small>
               </button>
 
